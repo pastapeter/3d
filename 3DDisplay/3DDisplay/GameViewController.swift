@@ -58,9 +58,9 @@ class GameViewController: UIViewController {
     switch shapeIndex{
     case 0:
       let box = geometry[0] as! SCNBox
-      box.width = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
-      box.height = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
-      box.length = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
+//      box.width = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
+//      box.height = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
+//      box.length = CGFloat(1 + (Double(data[0].value) - 1.0) * 0.75)
       
       
       box.firstMaterial?.diffuse.contents = shapeDatasource[shapeIndex].color
@@ -69,12 +69,12 @@ class GameViewController: UIViewController {
       scnScene.rootNode.addChildNode(SCNNode(geometry: box))
     case 1:
       let cylinder = geometry[0] as! SCNCylinder
-      cylinder.height = CGFloat(data[1].value)
+//      cylinder.height = CGFloat(data[1].value)
       cylinder.firstMaterial?.diffuse.contents = UIImage(named: shapeDatasource[shapeIndex].texture)
       scnScene.rootNode.addChildNode(SCNNode(geometry: cylinder))
     case 2:
       let sphere = geometry[0] as! SCNSphere
-      sphere.radius = CGFloat(0.25 * Double(data[2].value))
+//      sphere.radius = CGFloat(0.25 * Double(data[2].value))
       sphere.firstMaterial?.diffuse.contents = Finish.init(rawValue: shapeDatasource[shapeIndex].finish)?.image
       scnScene.rootNode.addChildNode(SCNNode(geometry: sphere))
     default:

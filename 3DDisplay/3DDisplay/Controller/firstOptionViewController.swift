@@ -26,6 +26,9 @@ class firstOptionViewController: UIViewController {
     self.present(SampleViewController(), animated: true, completion: nil)
   }
   
+  @IBAction func gotoResult(_ sender: UIButton) {
+    self.present(AlbumViewController(), animated: true)
+  }
   
 }
 
@@ -48,8 +51,8 @@ extension firstOptionViewController: UIPickerViewDataSource {
 extension firstOptionViewController: UIPickerViewDelegate {
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
     
-    guard let vc = InputViewController.loadFromStoryboard() as? InputViewController else {return}
-    vc.navtitleText = domain[row].rawValue
+    guard let vc = MainViewController.loadFromStoryboard() as? MainViewController else {return}
+    vc.domain = domain[row].rawValue
     
     self.navigationController?.pushViewController(vc, animated: true)
   }
