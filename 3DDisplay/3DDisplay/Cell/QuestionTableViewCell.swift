@@ -15,7 +15,9 @@ class QuestionTableViewCell: UITableViewCell {
   @IBOutlet weak var questionLabel: UILabel!
   @IBOutlet weak var questionValueLabel: UILabel!
   @IBOutlet weak var questionTextfield: UITextField!
+  @IBOutlet weak var finishTextField: UITextField!
   @IBOutlet weak var stackview: UIStackView!
+  @IBOutlet weak var textFieldsStackView: UIStackView!
   
   @IBOutlet weak var colorField: UIButton! {
     didSet {
@@ -32,7 +34,7 @@ class QuestionTableViewCell: UITableViewCell {
   var presentColorPicker: (()->Void)?
   var colorViewController: UIColorPickerViewController?
   var updateColor: ((_ color: UIColor) -> ())?
-  var updateUI: ((_ value: String) -> ())?
+  var updateUI: ((_ value: String, _ finish: Finish) -> ())?
   private var glossyList = Finish.allCases.map { $0.rawValue }
   
   
@@ -41,6 +43,7 @@ class QuestionTableViewCell: UITableViewCell {
     pickerView.delegate = self
     pickerView.dataSource = self
     questionTextfield.inputView = pickerView
+    finishTextField.inputView = pickerView
     addToolbar()
     setupFont()
   }
@@ -56,9 +59,15 @@ class QuestionTableViewCell: UITableViewCell {
   
   
   @IBAction func textfieldDidEnd(_ sender: UITextField) {
-    guard let text = sender.text else {return}
-    questionTextfield.text = text
-    updateUI?(text)
+    if sender == questionTextfield {
+      guard let text = sender.text else {return}
+      questionTextfield.text = text
+      updateUI?(text, Finish(rawValue: finishTextField.text ?? "Natural") ?? .Natural)
+    } else {
+      guard let text = sender.text else {return}
+      finishTextField.text = text
+      updateUI?(questionTextfield.text ?? "Wood", Finish(rawValue: text) ?? .Natural)
+    }
   }
   
   @IBAction func didTapColorButton(_ sender: UIButton) {
@@ -83,7 +92,8 @@ extension QuestionTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     if  questionTextfield.isFirstResponder {
       return textureDic.count
     } else {
-      return textureDic[questionTextfield.text!]?.count ?? 5
+      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return 0}
+      return arr.count
     }
   }
   
@@ -92,19 +102,26 @@ extension QuestionTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     if  questionTextfield.isFirstResponder {
       return Array(textureDic.keys.map{String($0)})[row]
     } else {
-      return "\(textureDic[questionTextfield.text!]![row])"
+      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return nil}
+      return arr[row].rawValue
     }
     
   }
   
   func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    if questionTextfield.isFirstResponder {
       questionTextfield.text = Array(textureDic.keys.map{String($0)})[row]
+    } else {
+      finishTextField.text = textureDic[questionTextfield.text ?? "Wood"]![row].rawValue
+    }
+      
   }
   
   private func addToolbar() {
     let toolbar = UIToolbar()
     toolbar.frame = CGRect(x: 0, y: 0, width: 0, height: 35)
     self.questionTextfield.inputAccessoryView = toolbar
+    self.finishTextField.inputAccessoryView = toolbar
     
     let flexSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
     

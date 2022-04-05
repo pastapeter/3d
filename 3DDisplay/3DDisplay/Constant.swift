@@ -18,27 +18,22 @@ import UIKit
  [ Texture:[Finish들], Texture:[Finish들], Texture:[Finish들] ]
  */
 
-var textureDic = ["wood":[Finish.brushed, Finish.embossed], "metal": [Finish.grained], "leather": [Finish.matte], "plastic": [Finish.perforated, Finish.polished], "glass": [Finish.glossy]]
+var textureDic = ["Wood":[Finish.Polished, Finish.Natural], "Metal": [Finish.Polished, Finish.Brushed, Finish.Matte], "Leather": [Finish.Soft, Finish.Perforated], "Plastic": [Finish.Polished, Finish.Frosted], "Glass": [Finish.Glossy, Finish.Iridescent]]
 
 
 enum Finish: String, CaseIterable {
+
+  case Brushed
+  case Polished
+  case Natural // natural finish image를 추가하삼
+  case Soft // soft finish image를 추가하삼
+  case Frosted // frosted finish image를 추가하삼
+  case Iridescent // iridescent finish image를 추가하삼
+  case Glossy
+  case Grained
+  case Matte
+  case Perforated
   
-  //Wood
-  case brushed
-  case embossed
-  
-  //glass
-  case glossy
-  
-  //metal
-  case grained
-  
-  // leather
-  case matte
-  
-  //plastic
-  case perforated
-  case polished
   
   var image: UIImage {
     return UIImage(named: self.rawValue)!

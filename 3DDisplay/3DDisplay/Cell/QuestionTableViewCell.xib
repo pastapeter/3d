@@ -37,14 +37,27 @@
                                     <action selector="didTapColorButton:" destination="KGk-i7-Jjw" eventType="touchUpInside" id="NQg-ga-deJ"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5i0-Sf-gAd">
+                            <stackView opaque="NO" contentMode="scaleToFill" distribution="fillEqually" spacing="15" translatesAutoresizingMaskIntoConstraints="NO" id="aOs-Oc-rDI">
                                 <rect key="frame" x="0.0" y="96" width="359" height="34"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                                <connections>
-                                    <action selector="textfieldDidEnd:" destination="KGk-i7-Jjw" eventType="editingDidEnd" id="ypH-4v-Dcu"/>
-                                </connections>
-                            </textField>
+                                <subviews>
+                                    <textField opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="251" verticalCompressionResistancePriority="1000" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5i0-Sf-gAd">
+                                        <rect key="frame" x="0.0" y="0.0" width="172" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="textfieldDidEnd:" destination="KGk-i7-Jjw" eventType="editingDidEnd" id="ypH-4v-Dcu"/>
+                                        </connections>
+                                    </textField>
+                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Htm-cA-6sw">
+                                        <rect key="frame" x="187" y="0.0" width="172" height="34"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <action selector="textfieldDidEnd:" destination="KGk-i7-Jjw" eventType="editingDidEnd" id="Gc3-Mb-Ify"/>
+                                        </connections>
+                                    </textField>
+                                </subviews>
+                            </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="1" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="a16-pe-vaJ">
                                 <rect key="frame" x="0.0" y="145" width="359" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -87,11 +100,13 @@
             <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
             <connections>
                 <outlet property="colorField" destination="GyZ-uB-e6b" id="vom-LM-4yK"/>
+                <outlet property="finishTextField" destination="Htm-cA-6sw" id="png-Uj-57P"/>
                 <outlet property="questionLabel" destination="FT6-iX-hbY" id="8Ej-cd-Pbf"/>
                 <outlet property="questionSlider" destination="lju-Da-X8W" id="ALA-Kr-hNM"/>
                 <outlet property="questionTextfield" destination="5i0-Sf-gAd" id="xkh-SX-7pu"/>
                 <outlet property="questionValueLabel" destination="a16-pe-vaJ" id="O5K-Ek-Cne"/>
                 <outlet property="stackview" destination="R28-qN-KK8" id="eX6-hZ-zhe"/>
+                <outlet property="textFieldsStackView" destination="aOs-Oc-rDI" id="6UB-wa-sNa"/>
             </connections>
             <point key="canvasLocation" x="441.304347826087" y="127.23214285714285"/>
         </tableViewCell>
