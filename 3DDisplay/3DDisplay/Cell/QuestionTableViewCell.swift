@@ -16,6 +16,7 @@ class QuestionTableViewCell: UITableViewCell {
   @IBOutlet weak var questionValueLabel: UILabel!
   @IBOutlet weak var questionTextfield: UITextField!
   @IBOutlet weak var stackview: UIStackView!
+  
   @IBOutlet weak var colorField: UIButton! {
     didSet {
       colorField.layer.borderColor = UIColor.lightGray.cgColor
@@ -41,6 +42,7 @@ class QuestionTableViewCell: UITableViewCell {
     pickerView.dataSource = self
     questionTextfield.inputView = pickerView
     addToolbar()
+    setupFont()
   }
   
   @IBAction func didSliderChanged(_ sender: UISlider) {
@@ -61,6 +63,13 @@ class QuestionTableViewCell: UITableViewCell {
   
   @IBAction func didTapColorButton(_ sender: UIButton) {
     self.presentColorPicker?()
+  }
+  
+  func setupFont() {
+    questionLabel.font = UIFont(name: "Gill Sans", size: 21)
+    questionValueLabel.font = UIFont(name: "Gill Sans", size: 21)
+    questionLabel.textColor = .label.withAlphaComponent(0.9)
+    questionValueLabel.textColor = .label.withAlphaComponent(0.9)
   }
 }
 

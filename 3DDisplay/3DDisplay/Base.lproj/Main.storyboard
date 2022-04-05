@@ -52,7 +52,7 @@
             </objects>
             <point key="canvasLocation" x="4055.0724637681164" y="235.71428571428569"/>
         </scene>
-        <!--Domain-->
+        <!--First Option View Controller-->
         <scene sceneID="My8-b0-e2e">
             <objects>
                 <viewController storyboardIdentifier="firstOptionViewController" id="hMf-yj-EEU" customClass="firstOptionViewController" customModule="_DDisplay" customModuleProvider="target" sceneMemberID="viewController">
@@ -60,50 +60,61 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0p-T9-qhO">
+                                <rect key="frame" x="185.5" y="771" width="43" height="30"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Result"/>
+                                <connections>
+                                    <action selector="gotoResult:" destination="hMf-yj-EEU" eventType="touchUpInside" id="v99-Hj-dHA"/>
+                                </connections>
+                            </button>
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q0C-yz-NBs">
-                                <rect key="frame" x="47" y="313" width="320" height="216"/>
+                                <rect key="frame" x="47" y="385.5" width="320" height="175"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="175" id="Che-WB-U4f"/>
+                                </constraints>
                                 <connections>
                                     <outlet property="dataSource" destination="hMf-yj-EEU" id="Sxn-4F-8lr"/>
                                     <outlet property="delegate" destination="hMf-yj-EEU" id="8nL-Nb-ecs"/>
                                 </connections>
                             </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6vg-6B-3Ni">
-                                <rect key="frame" x="154" y="731" width="106" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="PROTOTYPE"/>
-                                <connections>
-                                    <action selector="gotoSample" destination="hMf-yj-EEU" eventType="touchUpInside" id="Dp1-0N-plB"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0p-T9-qhO">
-                                <rect key="frame" x="169" y="770" width="76" height="31"/>
-                                <state key="normal" title="Button"/>
-                                <buttonConfiguration key="configuration" style="plain" title="RESULT"/>
-                                <connections>
-                                    <action selector="gotoResult:" destination="hMf-yj-EEU" eventType="touchUpInside" id="v99-Hj-dHA"/>
-                                </connections>
-                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Domain" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ape-BV-gg3">
+                                <rect key="frame" x="168.5" y="363.5" width="77.5" height="28"/>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="24"/>
+                                <color key="textColor" white="0.0" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="EVERY OBJECT" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lb4-DU-7d4">
+                                <rect key="frame" x="91" y="281.5" width="232" height="41.5"/>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="36"/>
+                                <color key="textColor" white="0.0" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="e2t-cv-Iun"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="W0p-T9-qhO" firstAttribute="top" secondItem="6vg-6B-3Ni" secondAttribute="bottom" constant="8" symbolic="YES" id="1AD-as-JZy"/>
-                            <constraint firstItem="6vg-6B-3Ni" firstAttribute="top" secondItem="q0C-yz-NBs" secondAttribute="bottom" constant="202" id="LLx-8x-xpg"/>
-                            <constraint firstItem="W0p-T9-qhO" firstAttribute="centerX" secondItem="6vg-6B-3Ni" secondAttribute="centerX" id="MOQ-dg-S71"/>
+                            <constraint firstItem="Lb4-DU-7d4" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="39B-Yd-Kpl"/>
+                            <constraint firstItem="W0p-T9-qhO" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="3Sh-dz-9CX"/>
+                            <constraint firstItem="q0C-yz-NBs" firstAttribute="centerY" secondItem="4Ea-VE-rRf" secondAttribute="centerY" constant="25" id="MVH-Qx-X2L"/>
+                            <constraint firstItem="ape-BV-gg3" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="TnC-LZ-PSM"/>
                             <constraint firstItem="e2t-cv-Iun" firstAttribute="bottom" secondItem="W0p-T9-qhO" secondAttribute="bottom" constant="61" id="eyi-RG-O5K"/>
-                            <constraint firstItem="e2t-cv-Iun" firstAttribute="bottom" secondItem="6vg-6B-3Ni" secondAttribute="bottom" constant="100" id="h3W-Vl-4B0"/>
-                            <constraint firstItem="6vg-6B-3Ni" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="i0m-JT-a8K"/>
+                            <constraint firstItem="q0C-yz-NBs" firstAttribute="top" secondItem="ape-BV-gg3" secondAttribute="bottom" constant="-6" id="jBd-rQ-hqb"/>
+                            <constraint firstItem="ape-BV-gg3" firstAttribute="top" secondItem="Lb4-DU-7d4" secondAttribute="bottom" constant="40.5" id="qQ9-2b-u99"/>
                             <constraint firstItem="q0C-yz-NBs" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="sUB-pT-Rf5"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Domain" id="2hn-lb-KW6"/>
+                    <navigationItem key="navigationItem" id="2hn-lb-KW6"/>
                     <connections>
+                        <outlet property="domainTitle" destination="ape-BV-gg3" id="wp1-G9-z1a"/>
+                        <outlet property="everyObject" destination="Lb4-DU-7d4" id="8rU-rv-9kf"/>
                         <outlet property="optionPicker" destination="q0C-yz-NBs" id="awX-WJ-CkP"/>
+                        <outlet property="resultButton" destination="W0p-T9-qhO" id="FXX-y3-dS7"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CdG-wx-1AL" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-462" y="-631"/>
+            <point key="canvasLocation" x="-462.31884057971018" y="-631.47321428571422"/>
         </scene>
         <!--Question-->
         <scene sceneID="uHZ-Lt-lIf">
@@ -220,8 +231,8 @@
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="lRY-Mn-n8f" sceneMemberID="viewController">
                     <toolbarItems/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" largeTitles="YES" id="t0Y-M7-lcB">
-                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="t0Y-M7-lcB">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>

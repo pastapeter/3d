@@ -231,6 +231,8 @@ extension MainViewController: UITableViewDataSource {
         cell.updateUI = { [weak self] (value) in
           guard let self = self else {return}
           self.datasource[indexPath.row].material = value
+          let cylinder = self.scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
+          cylinder.geometry?.firstMaterial?.diffuse.contents = UIImage(named: self.datasource[indexPath.row].material ?? "plastic")
         }
       }
       // MARK: - Questions
