@@ -271,8 +271,8 @@ extension MainViewController: UITableViewDataSource {
             let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            print(material+finish.rawValue)
-            cube.geometry?.firstMaterial?.diffuse.contents = UIImage(named: material+finish.rawValue)
+            guard let image = UIImage(named: material+finish.rawValue) else {return}
+            cube.geometry?.firstMaterial?.diffuse.contents = image
           }
         } else {
           cell.updateUI = { [weak self] (value, finish) in
@@ -284,8 +284,8 @@ extension MainViewController: UITableViewDataSource {
             let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            print(material+finish.rawValue)
-            cylinder.geometry?.firstMaterial?.diffuse.contents = UIImage(named: material+finish.rawValue)
+            guard let image = UIImage(named: material+finish.rawValue) else {return}
+            cylinder.geometry?.firstMaterial?.diffuse.contents = image
           }
         }
       }
