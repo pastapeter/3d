@@ -26,17 +26,23 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var scnNode: SCNNode!
   var cameraNode: SCNNode!
   var domain: String = ""
+  var transparency: CGFloat = 1.0 {
+    didSet {
+      setupTransparency(alpha: transparency)
+    }
+  }
   
   var datasource: [Question] = [
-    Question(questionTitle: "Color", color: UIColor.red), // sphere
-    Question(questionTitle: "1-5. How important was the color in the selection of the product?", value: 1), // 높이
-    Question(questionTitle: "1-6. On a scale of 1 to 10, was the color selection based on function or emotion?", value: 1), // 크기
-    Question(questionTitle: "Material / Finish", material: "leather", finish: Finish.Brushed), // cube
-    Question(questionTitle: "2-5. How important was the material+finish in the selection of the product?", value: 1),
-    Question(questionTitle: "2-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1),
-    Question(questionTitle: "Material / Finish ", material: "leather", finish: Finish.Brushed), // cylinder
-    Question(questionTitle: "3-5. How important was the material+finish in the selection of the product?", value: 1),
-    Question(questionTitle: "3-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1)
+    Question(questionTitle: "Q. How long have you had this product?", value: 1), // 0
+    Question(questionTitle: "Color", color: UIColor.red), // sphere 1
+    Question(questionTitle: "1-5. How important was the color in the selection of the product?", value: 1), // 높이 2
+    Question(questionTitle: "1-6. On a scale of 1 to 10, was the color selection based on function or emotion?", value: 1), // 크기 3
+    Question(questionTitle: "Material", material: "leather"), // cube 4
+    Question(questionTitle: "2-5. How important was the material+finish in the selection of the product?", value: 1), // 5
+    Question(questionTitle: "2-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1), // 6
+    Question(questionTitle: "Material / Finish ", material: "leather", finish: Finish.Brushed), // cylinder 7
+    Question(questionTitle: "3-5. How important was the material+finish in the selection of the product?", value: 1), // 8
+    Question(questionTitle: "3-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1) //9
   ]
   var presentColorViewController: (() -> Void)?
   var updateColor: ((UIColor) -> Void)?
@@ -51,6 +57,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     setupScene()
     setupCamera()
     spawnShape()
+    transparency = 1 / 6
   }
   
   // MARK: - 3D Control
@@ -103,11 +110,21 @@ class MainViewController: UIViewController, StoryboardInstantiable {
       node.scale.x = Float(oldX + (Float(radius) / 2 - oldX) * Float(percentage))
       node.scale.y = Float(oldY + Float((height / 2 - CGFloat(oldY)) * CGFloat(Float(percentage))))
       node.scale.z = Float(oldZ + (Float(radius) / 2 - oldZ) * Float(percentage))
-    
+      
     }
     sphere.runAction(action)
   }
-
+  
+  func setupTransparency(alpha: CGFloat) {
+    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!
+    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
+    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!
+    let nodes = [sphere, cylinder, cube]
+    nodes.forEach { node in
+      node.geometry?.firstMaterial?.transparency = 1 / (7 - alpha)
+    }
+  }
+  
   
   func setupView() {
     // 1
@@ -160,7 +177,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     cylinderNode.position = SCNVector3(node.position.x + 6, node.position.y, node.position.z)
     scnScene.rootNode.addChildNode(cylinderNode)
     
-   
+    
     
   }
   
@@ -232,13 +249,27 @@ extension MainViewController: UITableViewDataSource {
     
     cell.questionLabel.text = datasource[indexPath.row].questionTitle
     cell.index = indexPath.row
-    
-    if indexPath.row % 3 == 0 { //indexpath == 0, 3, 6
+    if indexPath.row == 0 {
+      cell.textFieldsStackView.isHidden = true
+      cell.questionValueLabel.isHidden = false
+      cell.colorField.isHidden = true
+      cell.questionSlider.isHidden = false
+      cell.questionSlider.minimumValue = 1
+      cell.questionSlider.maximumValue = Float(HowLong.allCases.count)
+      cell.questionValueLabel.text = HowLong.allCases[0].description
+      cell.stackview.isHidden = true
+      cell.updateValue = { [weak self] index, value in
+        guard let self = self, self.datasource[index].value != value else {return}
+        self.datasource[index].value = value
+        cell.questionValueLabel.text = HowLong.allCases[(self.datasource[0].value ?? 1) - 1].description
+        self.transparency = CGFloat(value)
+      }
+    } else if indexPath.row % 3 == 1 { //indexpath == 1, 4, 7
       cell.questionValueLabel.isHidden = true
       cell.questionSlider.isHidden = true
       cell.stackview.isHidden = true
       // MARK: -  COLOR
-      if indexPath.row == 0 {
+      if indexPath.row == 1 {
         cell.textFieldsStackView.isHidden = true
         cell.colorField.isHidden = false
         cell.updateColor =  { [weak self] color in
@@ -253,7 +284,7 @@ extension MainViewController: UITableViewDataSource {
           cell.colorViewController!.delegate = self
           self.present(cell.colorViewController!, animated: true, completion: nil)
         }
-        // MARK: - Material indexpath 3, 6
+        // MARK: - Material indexpath 4, 7
       } else {
         
         cell.textFieldsStackView.isHidden = false
@@ -261,7 +292,7 @@ extension MainViewController: UITableViewDataSource {
         cell.questionTextfield.placeholder = "Enter the Material"
         cell.finishTextField.placeholder = "Enter the Finish"
         
-        if indexPath.row == 3 {
+        if indexPath.row == 4 {
           cell.updateUI = { [weak self] (value, finish) in
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value

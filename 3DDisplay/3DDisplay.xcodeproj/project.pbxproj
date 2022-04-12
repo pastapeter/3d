@@ -22,6 +22,7 @@
 		28D8448927B8272500F4C3B9 /* ShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D8448027B8272500F4C3B9 /* ShapeType.swift */; };
 		28D8448C27B8272500F4C3B9 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D8448327B8272500F4C3B9 /* GameViewController.swift */; };
 		28D8448F27B8273000F4C3B9 /* GeometryFighter.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */; };
+		B15E34FD2805EA93005D588A /* HowLong.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FC2805EA93005D588A /* HowLong.swift */; };
 		B1615EA327F3460400DC4E63 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1615EA227F3460400DC4E63 /* AlbumViewController.swift */; };
 		B1615EA627F3463500DC4E63 /* TextureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1615EA427F3463500DC4E63 /* TextureTableViewCell.swift */; };
 		B1615EA727F3463500DC4E63 /* TextureTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1615EA527F3463500DC4E63 /* TextureTableViewCell.xib */; };
@@ -69,6 +70,7 @@
 		28D8448027B8272500F4C3B9 /* ShapeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeType.swift; sourceTree = "<group>"; };
 		28D8448327B8272500F4C3B9 /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GeometryFighter.scnassets; sourceTree = "<group>"; };
+		B15E34FC2805EA93005D588A /* HowLong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowLong.swift; sourceTree = "<group>"; };
 		B1615EA227F3460400DC4E63 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		B1615EA427F3463500DC4E63 /* TextureTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureTableViewCell.swift; sourceTree = "<group>"; };
 		B1615EA527F3463500DC4E63 /* TextureTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextureTableViewCell.xib; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 			isa = PBXGroup;
 			children = (
 				B1615EAF27F3546A00DC4E63 /* totalModel.swift */,
+				B15E34FC2805EA93005D588A /* HowLong.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				B1615EA327F3460400DC4E63 /* AlbumViewController.swift in Sources */,
 				285D0DD127E2E55500B22287 /* StoryboardInit.swift in Sources */,
 				28D8448827B8272500F4C3B9 /* QuestionTableViewCell.swift in Sources */,
+				B15E34FD2805EA93005D588A /* HowLong.swift in Sources */,
 				B1615EB027F3546A00DC4E63 /* totalModel.swift in Sources */,
 				B1615EA627F3463500DC4E63 /* TextureTableViewCell.swift in Sources */,
 				28D8448C27B8272500F4C3B9 /* GameViewController.swift in Sources */,

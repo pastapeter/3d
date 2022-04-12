@@ -49,7 +49,9 @@ class QuestionTableViewCell: UITableViewCell {
   }
   
   @IBAction func didSliderChanged(_ sender: UISlider) {
-    questionValueLabel.text = "\(Int(sender.value))"
+    if index != 0 {
+      questionValueLabel.text = "\(Int(sender.value))"
+    }
     updateValue?(index, Int(sender.value))
   }
   
