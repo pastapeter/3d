@@ -293,6 +293,7 @@ extension MainViewController: UITableViewDataSource {
         cell.finishTextField.placeholder = "Enter the Finish"
         
         if indexPath.row == 4 {
+          cell.finishTextField.isHidden = true
           cell.updateUI = { [weak self] (value, finish) in
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value
