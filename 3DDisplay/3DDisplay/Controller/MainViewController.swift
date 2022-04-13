@@ -52,14 +52,15 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var presentColorViewController: (() -> Void)?
   var updateColor: ((UIColor) -> Void)?
   var handler: ((UIColor) -> Void)?
-  var lastPanLocation: SCNVector3?
-  let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(panGesture:)))
+  var lastPanLocation = SCNVector3(x: 1, y: 1, z: 0)
   var spherePoint: SCNVector3?
   var cubePoint: SCNVector3?
   var cylinderPoint: SCNVector3?
   var mainSpherePosition: SCNVector3 = SCNVector3(x: 4, y: 1, z: 3)
   var mainCubePosition = SCNVector3(x: 1, y: 1, z: 0)
   var mainCylinderPosition = SCNVector3(x: 7, y: 1, z: 0)
+  var panStartz: CGFloat = 0
+  var targetNode: SCNNode?
   // MARK: - LifeCycle
   
   override func viewDidLoad() {
@@ -80,25 +81,44 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     switch panGesture.state {
     case .began:
       guard let hitNodeResult = scnView.hitTest(location, options: nil).first else {return}
-      print(location)
+      panStartz = CGFloat(scnView.projectPoint(lastPanLocation).z)
+      lastPanLocation = hitNodeResult.worldCoordinates
+      if hitNodeResult.node.name == "sphere" {
+        targetNode = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!
+      } else if hitNodeResult.node.name == "cube" {
+        targetNode = scnScene.rootNode.childNode(withName: "cube", recursively: true)!
+      } else if hitNodeResult.node.name == "cylinder" {
+        targetNode = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
+      } else {
+        targetNode = nil
+      }
     case .changed:
       let location = panGesture.location(in: scnView)
-      print(location)
+      let worldTouchPosition = scnView.unprojectPoint(SCNVector3(location.x, location.y, panStartz))
+      let dragX = worldTouchPosition.x - lastPanLocation.x
+      let movementVector = SCNVector3(dragX, worldTouchPosition.y - lastPanLocation.y, worldTouchPosition.z - lastPanLocation.z)
+      guard let targetNode = targetNode else {
+        return
+      }
+      targetNode.localTranslate(by: movementVector)
+      self.lastPanLocation = worldTouchPosition
+    case .ended:
+      targetNode = nil
     default:
       break
     }
     
   }
   
-  func move(focusName: String, completion: @escaping (String) -> ()) {
+  func move(focusName: String, completion: ((String) -> ())? = nil) {
     let focusNode = scnScene.rootNode.childNode(withName: focusName, recursively: true)!
     guard focusNode.position.x != mainSpherePosition.x else {return}
     if focusNode.position.x < mainSpherePosition.x {
       move120(direction: .clockwise)
-      completion(focusName)
+      completion?(focusName)
     } else if focusNode.position.x > mainSpherePosition.x {
       move120(direction: .unclockwise)
-      completion(focusName)
+      completion?(focusName)
     }
   }
   
@@ -202,11 +222,12 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     // 1
     scnView.showsStatistics = true
     // 2
-    scnView.allowsCameraControl = true
+//    scnView.allowsCameraControl = true
     // 3
     scnView.autoenablesDefaultLighting = true
     // 4
-    //    scnView.addGestureRecognizer(panRecognizer)
+    let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(panGesture:)))
+    scnView.addGestureRecognizer(panRecognizer)
     
   }
   
@@ -426,16 +447,16 @@ extension MainViewController: UITableViewDataSource {
         guard let self = self, self.datasource[index].value != value else {return}
         self.datasource[index].value = value
         if indexPath.row == 2 || indexPath.row == 3 {
-          self.move(focusName: "sphere") { self.move(focusName: $0, completion: {_ in })}
+          self.move(focusName: "sphere") { self.move(focusName: $0)}
           self.sphereScaleUp(radius: CGFloat(self.datasource[3].value ?? 1),
                              height: CGFloat(self.datasource[2].value ?? 1))
         } else if indexPath.row == 5 || indexPath.row == 6 {
-          self.move(focusName: "cube") { self.move(focusName: $0, completion: {_ in })}
+          self.move(focusName: "cube") { self.move(focusName: $0)}
           self.heightScaleUp(height: CGFloat(self.datasource[5].value ?? 1),
                              width: CGFloat(self.datasource[6].value ?? 1),
                              length: CGFloat(self.datasource[6].value ?? 1))
         } else {
-          self.move(focusName: "cylinder") { self.move(focusName: $0, completion: {_ in })}
+          self.move(focusName: "cylinder") { self.move(focusName: $0)}
           self.cylinderScaleUp(height: CGFloat(self.datasource[8].value ?? 1),
                                radius: CGFloat(self.datasource[9].value ?? 1))
         }
