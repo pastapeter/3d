@@ -17,6 +17,11 @@ struct Question {
   var finish: Finish?
 }
 
+enum Direction {
+  case clockwise
+  case unclockwise
+}
+
 class MainViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var questionTableView: UITableView!
@@ -47,7 +52,14 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var presentColorViewController: (() -> Void)?
   var updateColor: ((UIColor) -> Void)?
   var handler: ((UIColor) -> Void)?
-  
+  var lastPanLocation: SCNVector3?
+  let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(panGesture:)))
+  var spherePoint: SCNVector3?
+  var cubePoint: SCNVector3?
+  var cylinderPoint: SCNVector3?
+  var mainSpherePosition: SCNVector3 = SCNVector3(x: 4, y: 1, z: 3)
+  var mainCubePosition = SCNVector3(x: 1, y: 1, z: 0)
+  var mainCylinderPosition = SCNVector3(x: 7, y: 1, z: 0)
   // MARK: - LifeCycle
   
   override func viewDidLoad() {
@@ -63,6 +75,66 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   // MARK: - 3D Control
   // 1 -> 5 로가는데,
   
+  @objc func handlePan(panGesture: UIPanGestureRecognizer) {
+    let location = panGesture.location(in: scnView)
+    switch panGesture.state {
+    case .began:
+      guard let hitNodeResult = scnView.hitTest(location, options: nil).first else {return}
+      print(location)
+    case .changed:
+      let location = panGesture.location(in: scnView)
+      print(location)
+    default:
+      break
+    }
+    
+  }
+  
+  func move(focusName: String, completion: @escaping (String) -> ()) {
+    let focusNode = scnScene.rootNode.childNode(withName: focusName, recursively: true)!
+    guard focusNode.position.x != mainSpherePosition.x else {return}
+    if focusNode.position.x < mainSpherePosition.x {
+      move120(direction: .clockwise)
+      completion(focusName)
+    } else if focusNode.position.x > mainSpherePosition.x {
+      move120(direction: .unclockwise)
+      completion(focusName)
+    }
+  }
+  
+  func move120(direction: Direction) {
+    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!
+    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
+    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!
+    guard let spherePoint = spherePoint, let cubePoint = cubePoint, let cylinderPoint = cylinderPoint else {
+      return
+    }
+    let gotoSphere = SCNAction.move(to: spherePoint, duration: 0.5)
+    let gotoCube = SCNAction.move(to: cubePoint, duration: 0.5)
+    let gotoCylinder = SCNAction.move(to: cylinderPoint, duration: 0.5)
+    switch direction {
+    case .clockwise:
+      sphere.runAction(gotoCylinder) { [weak self] in
+        self?.spherePoint = sphere.position
+      }
+      cylinder.runAction(gotoCube) { [weak self] in
+        self?.cylinderPoint = cylinder.position
+      }
+      cube.runAction(gotoSphere) { [weak self] in
+        self?.cubePoint = cube.position
+      }
+    case .unclockwise:
+      sphere.runAction(gotoCube) { [weak self] in
+        self?.spherePoint = sphere.position
+      }
+      cylinder.runAction(gotoSphere) { [weak self] in
+        self?.cylinderPoint = cylinder.position
+      }
+      cube.runAction(gotoCylinder) { [weak self] in
+        self?.cubePoint = cube.position
+      }
+    }
+  }
   
   func heightScaleUp(height: CGFloat, width: CGFloat, length: CGFloat) {
     let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!
@@ -107,9 +179,9 @@ class MainViewController: UIViewController, StoryboardInstantiable {
       let oldY = node.scale.y
       let oldZ = node.scale.z
       
-      node.scale.x = Float(oldX + (Float(radius) / 2 - oldX) * Float(percentage))
-      node.scale.y = Float(oldY + Float((height / 2 - CGFloat(oldY)) * CGFloat(Float(percentage))))
-      node.scale.z = Float(oldZ + (Float(radius) / 2 - oldZ) * Float(percentage))
+      node.scale.x = Float(oldX + (Float(radius)  - oldX) * Float(percentage))
+      node.scale.y = Float(oldY + Float((height  - CGFloat(oldY)) * CGFloat(Float(percentage))))
+      node.scale.z = Float(oldZ + (Float(radius) - oldZ) * Float(percentage))
       
     }
     sphere.runAction(action)
@@ -133,6 +205,8 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     scnView.allowsCameraControl = true
     // 3
     scnView.autoenablesDefaultLighting = true
+    // 4
+    //    scnView.addGestureRecognizer(panRecognizer)
     
   }
   
@@ -156,28 +230,30 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     
     //    guard let object = asset.object(at: 0) as? MDLMesh else {return}
     //    let node = SCNNode(mdlObject: object)
+    let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    let boxNode = SCNNode(geometry: box)
+    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "plastic")
+    boxNode.position = SCNVector3(1,1,0)
+    cubePoint = boxNode.position
+    boxNode.name = "cube"
+    scnScene.rootNode.addChildNode(boxNode)
+    
     let sphere = SCNSphere(radius: 0.5)
     sphere.firstMaterial?.diffuse.contents = UIColor.red
     let node = SCNNode(geometry: sphere)
     node.name = "sphere"
-    node.position = SCNVector3(1,1,1)
+    node.position = SCNVector3(boxNode.position.x + 3, boxNode.position.y, boxNode.position.z + 3)
+    spherePoint = node.position
     scnScene.rootNode.addChildNode(node)
     
-    let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
-    let boxNode = SCNNode(geometry: box)
-    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "plastic")
-    boxNode.position = SCNVector3(node.position.x + 3, node.position.y, node.position.z)
-    boxNode.name = "cube"
-    scnScene.rootNode.addChildNode(boxNode)
     
     let cylinder = SCNCylinder(radius: 0.5, height: 1)
     cylinder.firstMaterial?.diffuse.contents = UIImage(named: datasource[6].material ?? "plastic")
     let cylinderNode = SCNNode(geometry: cylinder)
     cylinderNode.name = "cylinder"
-    cylinderNode.position = SCNVector3(node.position.x + 6, node.position.y, node.position.z)
+    cylinderNode.position = SCNVector3(boxNode.position.x + 6, boxNode.position.y, boxNode.position.z)
+    cylinderPoint = cylinderNode.position
     scnScene.rootNode.addChildNode(cylinderNode)
-    
-    
     
   }
   
@@ -249,6 +325,9 @@ extension MainViewController: UITableViewDataSource {
     
     cell.questionLabel.text = datasource[indexPath.row].questionTitle
     cell.index = indexPath.row
+    cell.questionValueLabel.text = "\(self.datasource[indexPath.row].value ?? 0)"
+    cell.questionSlider.value = Float(self.datasource[indexPath.row].value ?? 0)
+    
     if indexPath.row == 0 {
       cell.textFieldsStackView.isHidden = true
       cell.questionValueLabel.isHidden = false
@@ -274,6 +353,7 @@ extension MainViewController: UITableViewDataSource {
         cell.colorField.isHidden = false
         cell.updateColor =  { [weak self] color in
           guard let self = self else {return}
+          self.move(focusName: "sphere") { self.move(focusName: $0, completion: {_ in })}
           cell.colorField.backgroundColor = color
           self.datasource[indexPath.row].color = color
         }
@@ -298,12 +378,13 @@ extension MainViewController: UITableViewDataSource {
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value
             self.datasource[indexPath.row].finish = finish
+            self.move(focusName: "cube") { self.move(focusName: $0, completion: { _ in}) }
             let cube = self.scnScene.rootNode.childNode(withName: "cube", recursively: true)!
             let material = self.datasource[indexPath.row].material ?? "Wood"
-            let finish = self.datasource[indexPath.row].finish ?? .Natural
+            //            let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            guard let image = UIImage(named: material+finish.rawValue) else {return}
+            guard let image = UIImage(named: material) else {return}
             cube.geometry?.firstMaterial?.diffuse.contents = image
           }
         } else {
@@ -311,6 +392,7 @@ extension MainViewController: UITableViewDataSource {
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value
             self.datasource[indexPath.row].finish = finish
+            self.move(focusName: "cylinder") { self.move(focusName: $0, completion: { _ in}) }
             let cylinder = self.scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
             let material = self.datasource[indexPath.row].material ?? "Wood"
             let finish = self.datasource[indexPath.row].finish ?? .Natural
@@ -327,7 +409,7 @@ extension MainViewController: UITableViewDataSource {
       cell.questionValueLabel.isHidden = false
       cell.colorField.isHidden = true
       cell.questionSlider.isHidden = false
-      if indexPath.row % 3 == 2 {
+      if indexPath.row % 3 == 0 {
         
         cell.questionSlider.minimumValue = 1
         cell.questionSlider.maximumValue = 5
@@ -343,16 +425,19 @@ extension MainViewController: UITableViewDataSource {
       cell.updateValue = { [weak self] (index, value)in
         guard let self = self, self.datasource[index].value != value else {return}
         self.datasource[index].value = value
-        if indexPath.row == 1 || indexPath.row == 2 {
-          self.sphereScaleUp(radius: CGFloat(self.datasource[2].value ?? 1),
-                             height: CGFloat(self.datasource[1].value ?? 1))
-        } else if indexPath.row == 4 || indexPath.row == 5 {
-          self.heightScaleUp(height: CGFloat(self.datasource[4].value ?? 1),
-                             width: CGFloat(self.datasource[5].value ?? 1),
-                             length: CGFloat(self.datasource[5].value ?? 1))
+        if indexPath.row == 2 || indexPath.row == 3 {
+          self.move(focusName: "sphere") { self.move(focusName: $0, completion: {_ in })}
+          self.sphereScaleUp(radius: CGFloat(self.datasource[3].value ?? 1),
+                             height: CGFloat(self.datasource[2].value ?? 1))
+        } else if indexPath.row == 5 || indexPath.row == 6 {
+          self.move(focusName: "cube") { self.move(focusName: $0, completion: {_ in })}
+          self.heightScaleUp(height: CGFloat(self.datasource[5].value ?? 1),
+                             width: CGFloat(self.datasource[6].value ?? 1),
+                             length: CGFloat(self.datasource[6].value ?? 1))
         } else {
-          self.cylinderScaleUp(height: CGFloat(self.datasource[7].value ?? 1),
-                               radius: CGFloat(self.datasource[8].value ?? 1))
+          self.move(focusName: "cylinder") { self.move(focusName: $0, completion: {_ in })}
+          self.cylinderScaleUp(height: CGFloat(self.datasource[8].value ?? 1),
+                               radius: CGFloat(self.datasource[9].value ?? 1))
         }
       }
     }
