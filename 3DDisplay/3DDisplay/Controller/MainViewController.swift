@@ -9,19 +9,6 @@ import UIKit
 import SceneKit
 import ModelIO
 
-struct Question {
-  var questionTitle: String
-  var value: Int?
-  var color: UIColor?
-  var material: String?
-  var finish: Finish?
-}
-
-enum Direction {
-  case clockwise
-  case unclockwise
-}
-
 class MainViewController: UIViewController, StoryboardInstantiable {
   
   @IBOutlet weak var questionTableView: UITableView!
@@ -34,6 +21,9 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var transparency: CGFloat = 1.0 {
     didSet {
       setupTransparency(alpha: transparency)
+      cubeInfo.transparency = transparency
+      sphereInfo.transparency = transparency
+      cylinderInfo.transparency = transparency
     }
   }
   
@@ -61,6 +51,11 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var mainCylinderPosition = SCNVector3(x: 7, y: 1, z: 0)
   var panStartz: CGFloat = 0
   var targetNode: SCNNode?
+  
+  var cubeInfo = CubeInfo(image: UIImage(), size: (width: 1, height: 1, length: 1))
+  var sphereInfo = SphereInfo()
+  var cylinderInfo = CylinderInfo(image: UIImage())
+  
   // MARK: - LifeCycle
   
   override func viewDidLoad() {
@@ -72,44 +67,279 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     spawnShape()
     transparency = 1 / 6
   }
+
+  func setupView() {
+    // 1
+    scnView.showsStatistics = true
+    // 2
+    scnView.allowsCameraControl = true
+    // 3
+    scnView.autoenablesDefaultLighting = true
+    // 4
+    
+  }
   
-  // MARK: - 3D Control
-  // 1 -> 5 로가는데,
+  func setupScene() {
+    scnScene = SCNScene()
+    scnView.scene = scnScene
+  }
   
-  @objc func handlePan(panGesture: UIPanGestureRecognizer) {
-    let location = panGesture.location(in: scnView)
-    switch panGesture.state {
-    case .began:
-      guard let hitNodeResult = scnView.hitTest(location, options: nil).first else {return}
-      panStartz = CGFloat(scnView.projectPoint(lastPanLocation).z)
-      lastPanLocation = hitNodeResult.worldCoordinates
-      if hitNodeResult.node.name == "sphere" {
-        targetNode = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!
-      } else if hitNodeResult.node.name == "cube" {
-        targetNode = scnScene.rootNode.childNode(withName: "cube", recursively: true)!
-      } else if hitNodeResult.node.name == "cylinder" {
-        targetNode = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
-      } else {
-        targetNode = nil
-      }
-    case .changed:
-      let location = panGesture.location(in: scnView)
-      let worldTouchPosition = scnView.unprojectPoint(SCNVector3(location.x, location.y, panStartz))
-      let dragX = worldTouchPosition.x - lastPanLocation.x
-      let movementVector = SCNVector3(dragX, worldTouchPosition.y - lastPanLocation.y, worldTouchPosition.z - lastPanLocation.z)
-      guard let targetNode = targetNode else {
-        return
-      }
-      targetNode.localTranslate(by: movementVector)
-      self.lastPanLocation = worldTouchPosition
-    case .ended:
-      targetNode = nil
-    default:
-      break
+  func setupCamera() {
+    cameraNode = SCNNode()
+    cameraNode.camera = SCNCamera()
+    cameraNode.position = SCNVector3(x: 4, y: 7, z: 8)
+    cameraNode.eulerAngles = SCNVector3(-0.7, 0, 0)
+    scnScene.rootNode.addChildNode(cameraNode)
+  }
+  
+  func spawnShape() {
+    //    let path = Bundle.main.path(forResource: "test", ofType: "obj")
+    //    let url = URL(fileURLWithPath: path!)
+    //    let asset = MDLAsset(url: url)
+    
+    //    guard let object = asset.object(at: 0) as? MDLMesh else {return}
+    //    let node = SCNNode(mdlObject: object)
+    let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    let boxNode = SCNNode(geometry: box)
+    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "plastic")
+    boxNode.position = SCNVector3(1,1,0)
+    cubePoint = boxNode.position
+    boxNode.name = "cube"
+    scnScene.rootNode.addChildNode(boxNode)
+    
+    let sphere = SCNSphere(radius: 0.5)
+    sphere.firstMaterial?.diffuse.contents = UIColor.red
+    let node = SCNNode(geometry: sphere)
+    node.name = "sphere"
+    node.position = SCNVector3(boxNode.position.x + 3, boxNode.position.y, boxNode.position.z + 3)
+    spherePoint = node.position
+    scnScene.rootNode.addChildNode(node)
+    
+    
+    let cylinder = SCNCylinder(radius: 0.5, height: 1)
+    cylinder.firstMaterial?.diffuse.contents = UIImage(named: datasource[6].material ?? "plastic")
+    let cylinderNode = SCNNode(geometry: cylinder)
+    cylinderNode.name = "cylinder"
+    cylinderNode.position = SCNVector3(boxNode.position.x + 6, boxNode.position.y, boxNode.position.z)
+    cylinderPoint = cylinderNode.position
+    scnScene.rootNode.addChildNode(cylinderNode)
+    
+  }
+  
+  override var shouldAutorotate: Bool {
+    return true
+  }
+  
+  // MARK: - UI
+  
+  private func setupUI() {
+    questionTableView.register(UINib(nibName: QuestionTableViewCell.nibName, bundle: nil), forCellReuseIdentifier: QuestionTableViewCell.identifier)
+    questionTableView.register(UINib(nibName: TextureTableViewCell.nibName, bundle: nil), forCellReuseIdentifier: TextureTableViewCell.identifier)
+    questiontableView.delegate = self
+    questiontableView.dataSource = self
+    
+    presentColorViewController = { [weak self] in
+      guard let self = self else {return}
+      let colorViewController = UIColorPickerViewController()
+      colorViewController.delegate = self
+      self.present(colorViewController, animated: true, completion: nil)
+    }
+  }
+  
+  
+  // MARK: - IBAction
+  
+  @IBAction func didTapShareButton(_ sender: Any) {
+    guard let geometry = scnScene.rootNode.childNode(withName: "test", recursively: true)?.geometry else {return }
+    
+    let fixedFilenameOBJ = String("MyGeometryObject.obj")
+    let fixedFilenameMTL = String("MyGeometryObject.mtl")
+    
+    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
+    let fullPathMTL = getDocumentsDirectory().appendingPathComponent(fixedFilenameMTL) // for the MTL file
+    
+    let mesh = MDLMesh(scnGeometry: geometry)
+    let asset = MDLAsset()
+    asset.add(mesh)
+    
+    do {
+      let my3d = try asset.export(to: fullPathOBJ)
+      
+      let totalModel = totalModel(domain: domain,
+                                  importanceForColor: datasource[1].value ?? 1,
+                                  FunctionalAndEmotionalForColor: datasource[2].value ?? 1,
+                                  importanceForMaterial: datasource[4].value ?? 1,
+                                  FunctionalAndEmotionalForMaterial: datasource[5].value ?? 1,
+                                  URL: fullPathOBJ
+      )
+      
+    } catch {
+      print("Couldn't create file(s)")
+      return
     }
     
   }
   
+  @IBAction func gotoResultVC(_ sender: UIBarButtonItem) {
+    let storyboard = UIStoryboard(name: "Main", bundle: nil)
+    let vc = storyboard.instantiateViewController(identifier: "GameViewController") as! GameViewController
+    vc.cubeInfo = cubeInfo
+    vc.cylinderInfo = cylinderInfo
+    vc.sphereInfo = sphereInfo    
+    self.navigationController?.pushViewController(vc, animated: true)
+  }
+  
+  
+}
+
+extension MainViewController: UITableViewDataSource {
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    datasource.count
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    
+    guard let cell = tableView.dequeueReusableCell(withIdentifier: QuestionTableViewCell.identifier, for: indexPath) as? QuestionTableViewCell else {return QuestionTableViewCell()}
+    
+    cell.questionLabel.text = datasource[indexPath.row].questionTitle
+    cell.index = indexPath.row
+    cell.questionValueLabel.text = "\(self.datasource[indexPath.row].value ?? 0)"
+    cell.questionSlider.value = Float(self.datasource[indexPath.row].value ?? 0)
+    
+    if indexPath.row == 0 {
+      cell.textFieldsStackView.isHidden = true
+      cell.questionValueLabel.isHidden = false
+      cell.colorField.isHidden = true
+      cell.questionSlider.isHidden = false
+      cell.questionSlider.minimumValue = 1
+      cell.questionSlider.maximumValue = Float(HowLong.allCases.count)
+      cell.questionValueLabel.text = HowLong.allCases[0].description
+      cell.stackview.isHidden = true
+      
+      cell.updateValue = { [weak self] index, value in
+        guard let self = self, self.datasource[index].value != value else {return}
+        self.datasource[index].value = value
+        cell.questionValueLabel.text = HowLong.allCases[(self.datasource[0].value ?? 1) - 1].description
+        self.transparency = CGFloat(value)
+      }
+    } else if indexPath.row % 3 == 1 { //indexpath == 1, 4, 7
+      cell.questionValueLabel.isHidden = true
+      cell.questionSlider.isHidden = true
+      cell.stackview.isHidden = true
+      // MARK: -  COLOR
+      if indexPath.row == 1 {
+        cell.textFieldsStackView.isHidden = true
+        cell.colorField.isHidden = false
+        cell.updateColor =  { [weak self] color in
+          guard let self = self else {return}
+          self.move(focusName: "sphere") { self.move(focusName: $0, completion: {_ in })}
+          cell.colorField.backgroundColor = color
+          self.sphereInfo.color = color
+          self.datasource[indexPath.row].color = color
+        }
+        handler = cell.updateColor
+        cell.colorViewController = UIColorPickerViewController()
+        cell.presentColorPicker = { [weak self] in
+          guard let self = self else {return}
+          cell.colorViewController!.delegate = self
+          self.present(cell.colorViewController!, animated: true, completion: nil)
+        }
+        // MARK: - Material indexpath 4, 7
+      } else {
+        
+        cell.textFieldsStackView.isHidden = false
+        cell.colorField.isHidden = true
+        cell.questionTextfield.placeholder = "Enter the Material"
+        cell.finishTextField.placeholder = "Enter the Finish"
+        
+        if indexPath.row == 4 {
+          cell.finishTextField.isHidden = true
+          cell.updateUI = { [weak self] (value, finish) in
+            guard let self = self else {return}
+            self.datasource[indexPath.row].material = value
+            self.datasource[indexPath.row].finish = finish
+            self.move(focusName: "cube") { self.move(focusName: $0, completion: { _ in}) }
+            let cube = self.scnScene.rootNode.childNode(withName: "cube", recursively: true)!
+            let material = self.datasource[indexPath.row].material ?? "Wood"
+            //            let finish = self.datasource[indexPath.row].finish ?? .Natural
+            
+            // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
+            guard let image = UIImage(named: material) else {return}
+            self.cubeInfo.image = image
+            cube.geometry?.firstMaterial?.diffuse.contents = image
+          }
+        } else {
+          cell.updateUI = { [weak self] (value, finish) in
+            guard let self = self else {return}
+            self.datasource[indexPath.row].material = value
+            self.datasource[indexPath.row].finish = finish
+            self.move(focusName: "cylinder") { self.move(focusName: $0, completion: { _ in}) }
+            let cylinder = self.scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
+            let material = self.datasource[indexPath.row].material ?? "Wood"
+            let finish = self.datasource[indexPath.row].finish ?? .Natural
+            
+            // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
+            guard let image = UIImage(named: material+finish.rawValue) else {return}
+            self.cylinderInfo.image = image
+            cylinder.geometry?.firstMaterial?.diffuse.contents = image
+          }
+        }
+      }
+      // MARK: - Questions
+    } else {
+      cell.textFieldsStackView.isHidden = true
+      cell.questionValueLabel.isHidden = false
+      cell.colorField.isHidden = true
+      cell.questionSlider.isHidden = false
+      if indexPath.row % 3 == 0 {
+        
+        cell.questionSlider.minimumValue = 1
+        cell.questionSlider.maximumValue = 5
+        cell.stackview.isHidden = false
+      } else {
+        // 1-5, 2-5
+        cell.questionSlider.minimumValue = 1
+        cell.questionSlider.maximumValue = 5
+        cell.stackview.isHidden = true
+      }
+      
+      // MARK: - Update value -> Animation
+      cell.updateValue = { [weak self] (index, value)in
+        guard let self = self, self.datasource[index].value != value else {return}
+        self.datasource[index].value = value
+        if indexPath.row == 2 || indexPath.row == 3 {
+          self.move(focusName: "sphere") { self.move(focusName: $0)}
+          self.sphereScaleUp(radius: CGFloat(self.datasource[3].value ?? 1),
+                             height: CGFloat(self.datasource[2].value ?? 1))
+          self.sphereInfo.radius = CGFloat(self.datasource[3].value ?? 1)
+          self.sphereInfo.height = CGFloat(self.datasource[2].value ?? 1)
+        } else if indexPath.row == 5 || indexPath.row == 6 {
+          self.move(focusName: "cube") { self.move(focusName: $0)}
+          self.heightScaleUp(height: CGFloat(self.datasource[5].value ?? 1),
+                             width: CGFloat(self.datasource[6].value ?? 1),
+                             length: CGFloat(self.datasource[6].value ?? 1))
+          self.cubeInfo.size = ( width: CGFloat(self.datasource[6].value ?? 1),
+                                 height: CGFloat(self.datasource[5].value ?? 1),
+                                length: CGFloat(self.datasource[6].value ?? 1))
+        } else {
+          self.move(focusName: "cylinder") { self.move(focusName: $0)}
+          self.cylinderScaleUp(height: CGFloat(self.datasource[8].value ?? 1),
+                               radius: CGFloat(self.datasource[9].value ?? 1))
+          self.cylinderInfo.size = (radius: CGFloat(self.datasource[9].value ?? 1),
+                                    height: CGFloat(self.datasource[8].value ?? 1))
+        }
+      }
+    }
+    
+    return cell
+  }
+  
+}
+
+// MARK: - 3D Action Control
+extension MainViewController {
+
   func move(focusName: String, completion: ((String) -> ())? = nil) {
     let focusNode = scnScene.rootNode.childNode(withName: focusName, recursively: true)!
     guard focusNode.position.x != mainSpherePosition.x else {return}
@@ -215,255 +445,6 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     nodes.forEach { node in
       node.geometry?.firstMaterial?.transparency = 1 / (7 - alpha)
     }
-  }
-  
-  
-  func setupView() {
-    // 1
-    scnView.showsStatistics = true
-    // 2
-//    scnView.allowsCameraControl = true
-    // 3
-    scnView.autoenablesDefaultLighting = true
-    // 4
-    let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(panGesture:)))
-    scnView.addGestureRecognizer(panRecognizer)
-    
-  }
-  
-  func setupScene() {
-    scnScene = SCNScene()
-    scnView.scene = scnScene
-  }
-  
-  func setupCamera() {
-    cameraNode = SCNNode()
-    cameraNode.camera = SCNCamera()
-    cameraNode.position = SCNVector3(x: 4, y: 7, z: 8)
-    cameraNode.eulerAngles = SCNVector3(-0.7, 0, 0)
-    scnScene.rootNode.addChildNode(cameraNode)
-  }
-  
-  func spawnShape() {
-    //    let path = Bundle.main.path(forResource: "test", ofType: "obj")
-    //    let url = URL(fileURLWithPath: path!)
-    //    let asset = MDLAsset(url: url)
-    
-    //    guard let object = asset.object(at: 0) as? MDLMesh else {return}
-    //    let node = SCNNode(mdlObject: object)
-    let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
-    let boxNode = SCNNode(geometry: box)
-    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "plastic")
-    boxNode.position = SCNVector3(1,1,0)
-    cubePoint = boxNode.position
-    boxNode.name = "cube"
-    scnScene.rootNode.addChildNode(boxNode)
-    
-    let sphere = SCNSphere(radius: 0.5)
-    sphere.firstMaterial?.diffuse.contents = UIColor.red
-    let node = SCNNode(geometry: sphere)
-    node.name = "sphere"
-    node.position = SCNVector3(boxNode.position.x + 3, boxNode.position.y, boxNode.position.z + 3)
-    spherePoint = node.position
-    scnScene.rootNode.addChildNode(node)
-    
-    
-    let cylinder = SCNCylinder(radius: 0.5, height: 1)
-    cylinder.firstMaterial?.diffuse.contents = UIImage(named: datasource[6].material ?? "plastic")
-    let cylinderNode = SCNNode(geometry: cylinder)
-    cylinderNode.name = "cylinder"
-    cylinderNode.position = SCNVector3(boxNode.position.x + 6, boxNode.position.y, boxNode.position.z)
-    cylinderPoint = cylinderNode.position
-    scnScene.rootNode.addChildNode(cylinderNode)
-    
-  }
-  
-  override var shouldAutorotate: Bool {
-    return true
-  }
-  
-  // MARK: - UI
-  
-  private func setupUI() {
-    questionTableView.register(UINib(nibName: QuestionTableViewCell.nibName, bundle: nil), forCellReuseIdentifier: QuestionTableViewCell.identifier)
-    questionTableView.register(UINib(nibName: TextureTableViewCell.nibName, bundle: nil), forCellReuseIdentifier: TextureTableViewCell.identifier)
-    questiontableView.delegate = self
-    questiontableView.dataSource = self
-    
-    presentColorViewController = { [weak self] in
-      guard let self = self else {return}
-      let colorViewController = UIColorPickerViewController()
-      colorViewController.delegate = self
-      self.present(colorViewController, animated: true, completion: nil)
-    }
-  }
-  
-  
-  // MARK: - IBAction
-  
-  @IBAction func didTapShareButton(_ sender: Any) {
-    guard let geometry = scnScene.rootNode.childNode(withName: "test", recursively: true)?.geometry else {return }
-    
-    let fixedFilenameOBJ = String("MyGeometryObject.obj")
-    let fixedFilenameMTL = String("MyGeometryObject.mtl")
-    
-    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
-    let fullPathMTL = getDocumentsDirectory().appendingPathComponent(fixedFilenameMTL) // for the MTL file
-    
-    let mesh = MDLMesh(scnGeometry: geometry)
-    let asset = MDLAsset()
-    asset.add(mesh)
-    
-    do {
-      let my3d = try asset.export(to: fullPathOBJ)
-      
-      let totalModel = totalModel(domain: domain,
-                                  importanceForColor: datasource[1].value ?? 1,
-                                  FunctionalAndEmotionalForColor: datasource[2].value ?? 1,
-                                  importanceForMaterial: datasource[4].value ?? 1,
-                                  FunctionalAndEmotionalForMaterial: datasource[5].value ?? 1,
-                                  URL: fullPathOBJ
-      )
-      
-    } catch {
-      print("Couldn't create file(s)")
-      return
-    }
-    
-  }
-  
-}
-
-extension MainViewController: UITableViewDataSource {
-  
-  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    datasource.count
-  }
-  
-  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    
-    guard let cell = tableView.dequeueReusableCell(withIdentifier: QuestionTableViewCell.identifier, for: indexPath) as? QuestionTableViewCell else {return QuestionTableViewCell()}
-    
-    cell.questionLabel.text = datasource[indexPath.row].questionTitle
-    cell.index = indexPath.row
-    cell.questionValueLabel.text = "\(self.datasource[indexPath.row].value ?? 0)"
-    cell.questionSlider.value = Float(self.datasource[indexPath.row].value ?? 0)
-    
-    if indexPath.row == 0 {
-      cell.textFieldsStackView.isHidden = true
-      cell.questionValueLabel.isHidden = false
-      cell.colorField.isHidden = true
-      cell.questionSlider.isHidden = false
-      cell.questionSlider.minimumValue = 1
-      cell.questionSlider.maximumValue = Float(HowLong.allCases.count)
-      cell.questionValueLabel.text = HowLong.allCases[0].description
-      cell.stackview.isHidden = true
-      cell.updateValue = { [weak self] index, value in
-        guard let self = self, self.datasource[index].value != value else {return}
-        self.datasource[index].value = value
-        cell.questionValueLabel.text = HowLong.allCases[(self.datasource[0].value ?? 1) - 1].description
-        self.transparency = CGFloat(value)
-      }
-    } else if indexPath.row % 3 == 1 { //indexpath == 1, 4, 7
-      cell.questionValueLabel.isHidden = true
-      cell.questionSlider.isHidden = true
-      cell.stackview.isHidden = true
-      // MARK: -  COLOR
-      if indexPath.row == 1 {
-        cell.textFieldsStackView.isHidden = true
-        cell.colorField.isHidden = false
-        cell.updateColor =  { [weak self] color in
-          guard let self = self else {return}
-          self.move(focusName: "sphere") { self.move(focusName: $0, completion: {_ in })}
-          cell.colorField.backgroundColor = color
-          self.datasource[indexPath.row].color = color
-        }
-        handler = cell.updateColor
-        cell.colorViewController = UIColorPickerViewController()
-        cell.presentColorPicker = { [weak self] in
-          guard let self = self else {return}
-          cell.colorViewController!.delegate = self
-          self.present(cell.colorViewController!, animated: true, completion: nil)
-        }
-        // MARK: - Material indexpath 4, 7
-      } else {
-        
-        cell.textFieldsStackView.isHidden = false
-        cell.colorField.isHidden = true
-        cell.questionTextfield.placeholder = "Enter the Material"
-        cell.finishTextField.placeholder = "Enter the Finish"
-        
-        if indexPath.row == 4 {
-          cell.finishTextField.isHidden = true
-          cell.updateUI = { [weak self] (value, finish) in
-            guard let self = self else {return}
-            self.datasource[indexPath.row].material = value
-            self.datasource[indexPath.row].finish = finish
-            self.move(focusName: "cube") { self.move(focusName: $0, completion: { _ in}) }
-            let cube = self.scnScene.rootNode.childNode(withName: "cube", recursively: true)!
-            let material = self.datasource[indexPath.row].material ?? "Wood"
-            //            let finish = self.datasource[indexPath.row].finish ?? .Natural
-            
-            // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            guard let image = UIImage(named: material) else {return}
-            cube.geometry?.firstMaterial?.diffuse.contents = image
-          }
-        } else {
-          cell.updateUI = { [weak self] (value, finish) in
-            guard let self = self else {return}
-            self.datasource[indexPath.row].material = value
-            self.datasource[indexPath.row].finish = finish
-            self.move(focusName: "cylinder") { self.move(focusName: $0, completion: { _ in}) }
-            let cylinder = self.scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
-            let material = self.datasource[indexPath.row].material ?? "Wood"
-            let finish = self.datasource[indexPath.row].finish ?? .Natural
-            
-            // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            guard let image = UIImage(named: material+finish.rawValue) else {return}
-            cylinder.geometry?.firstMaterial?.diffuse.contents = image
-          }
-        }
-      }
-      // MARK: - Questions
-    } else {
-      cell.textFieldsStackView.isHidden = true
-      cell.questionValueLabel.isHidden = false
-      cell.colorField.isHidden = true
-      cell.questionSlider.isHidden = false
-      if indexPath.row % 3 == 0 {
-        
-        cell.questionSlider.minimumValue = 1
-        cell.questionSlider.maximumValue = 5
-        cell.stackview.isHidden = false
-      } else {
-        // 1-5, 2-5
-        cell.questionSlider.minimumValue = 1
-        cell.questionSlider.maximumValue = 5
-        cell.stackview.isHidden = true
-      }
-      
-      // MARK: - Update value -> Animation
-      cell.updateValue = { [weak self] (index, value)in
-        guard let self = self, self.datasource[index].value != value else {return}
-        self.datasource[index].value = value
-        if indexPath.row == 2 || indexPath.row == 3 {
-          self.move(focusName: "sphere") { self.move(focusName: $0)}
-          self.sphereScaleUp(radius: CGFloat(self.datasource[3].value ?? 1),
-                             height: CGFloat(self.datasource[2].value ?? 1))
-        } else if indexPath.row == 5 || indexPath.row == 6 {
-          self.move(focusName: "cube") { self.move(focusName: $0)}
-          self.heightScaleUp(height: CGFloat(self.datasource[5].value ?? 1),
-                             width: CGFloat(self.datasource[6].value ?? 1),
-                             length: CGFloat(self.datasource[6].value ?? 1))
-        } else {
-          self.move(focusName: "cylinder") { self.move(focusName: $0)}
-          self.cylinderScaleUp(height: CGFloat(self.datasource[8].value ?? 1),
-                               radius: CGFloat(self.datasource[9].value ?? 1))
-        }
-      }
-    }
-    
-    return cell
   }
   
 }

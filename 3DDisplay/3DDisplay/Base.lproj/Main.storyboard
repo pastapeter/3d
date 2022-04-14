@@ -50,7 +50,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9pR-I4-oPi" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4055.0724637681164" y="235.71428571428569"/>
+            <point key="canvasLocation" x="1899" y="-631"/>
         </scene>
         <!--First Option View Controller-->
         <scene sceneID="My8-b0-e2e">
@@ -210,11 +210,18 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="27a-R2-PhG">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="aYy-tv-XEE">
-                            <connections>
-                                <action selector="didTapShareButton:" destination="C9K-3r-TxE" id="BmH-Z2-dh8"/>
-                            </connections>
-                        </barButtonItem>
+                        <rightBarButtonItems>
+                            <barButtonItem systemItem="action" id="aYy-tv-XEE">
+                                <connections>
+                                    <action selector="didTapShareButton:" destination="C9K-3r-TxE" id="BmH-Z2-dh8"/>
+                                </connections>
+                            </barButtonItem>
+                            <barButtonItem systemItem="done" id="41G-lX-7kK">
+                                <connections>
+                                    <action selector="gotoResultVC:" destination="C9K-3r-TxE" id="uMb-qk-V0T"/>
+                                </connections>
+                            </barButtonItem>
+                        </rightBarButtonItems>
                     </navigationItem>
                     <connections>
                         <outlet property="questionTableView" destination="vb9-Oz-Haj" id="Oht-9J-ZPB"/>

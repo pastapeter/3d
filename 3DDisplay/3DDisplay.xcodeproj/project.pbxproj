@@ -23,6 +23,9 @@
 		28D8448F27B8273000F4C3B9 /* GeometryFighter.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */; };
 		B15E34FD2805EA93005D588A /* HowLong.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FC2805EA93005D588A /* HowLong.swift */; };
 		B15E34FF2806C396005D588A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FE2806C396005D588A /* GameViewController.swift */; };
+		B15E35012807EAD9005D588A /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E35002807EAD9005D588A /* Question.swift */; };
+		B15E35032807EAF0005D588A /* Direction.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E35022807EAF0005D588A /* Direction.swift */; };
+		B15E35052807F543005D588A /* GeometryInfos.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E35042807F543005D588A /* GeometryInfos.swift */; };
 		B1615EA327F3460400DC4E63 /* AlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1615EA227F3460400DC4E63 /* AlbumViewController.swift */; };
 		B1615EA627F3463500DC4E63 /* TextureTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1615EA427F3463500DC4E63 /* TextureTableViewCell.swift */; };
 		B1615EA727F3463500DC4E63 /* TextureTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B1615EA527F3463500DC4E63 /* TextureTableViewCell.xib */; };
@@ -71,6 +74,9 @@
 		28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GeometryFighter.scnassets; sourceTree = "<group>"; };
 		B15E34FC2805EA93005D588A /* HowLong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowLong.swift; sourceTree = "<group>"; };
 		B15E34FE2806C396005D588A /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
+		B15E35002807EAD9005D588A /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		B15E35022807EAF0005D588A /* Direction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Direction.swift; sourceTree = "<group>"; };
+		B15E35042807F543005D588A /* GeometryInfos.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeometryInfos.swift; sourceTree = "<group>"; };
 		B1615EA227F3460400DC4E63 /* AlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlbumViewController.swift; sourceTree = "<group>"; };
 		B1615EA427F3463500DC4E63 /* TextureTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TextureTableViewCell.swift; sourceTree = "<group>"; };
 		B1615EA527F3463500DC4E63 /* TextureTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TextureTableViewCell.xib; sourceTree = "<group>"; };
@@ -176,6 +182,9 @@
 			children = (
 				B1615EAF27F3546A00DC4E63 /* totalModel.swift */,
 				B15E34FC2805EA93005D588A /* HowLong.swift */,
+				B15E35002807EAD9005D588A /* Question.swift */,
+				B15E35022807EAF0005D588A /* Direction.swift */,
+				B15E35042807F543005D588A /* GeometryInfos.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -322,11 +331,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				28D8448927B8272500F4C3B9 /* ShapeType.swift in Sources */,
+				B15E35012807EAD9005D588A /* Question.swift in Sources */,
 				B1615EA327F3460400DC4E63 /* AlbumViewController.swift in Sources */,
 				285D0DD127E2E55500B22287 /* StoryboardInit.swift in Sources */,
 				28D8448827B8272500F4C3B9 /* QuestionTableViewCell.swift in Sources */,
 				B15E34FD2805EA93005D588A /* HowLong.swift in Sources */,
 				B1615EB027F3546A00DC4E63 /* totalModel.swift in Sources */,
+				B15E35052807F543005D588A /* GeometryInfos.swift in Sources */,
+				B15E35032807EAF0005D588A /* Direction.swift in Sources */,
 				B1615EA627F3463500DC4E63 /* TextureTableViewCell.swift in Sources */,
 				B1615EAB27F3477400DC4E63 /* AlbumCollectionViewCell.swift in Sources */,
 				285D0DCF27E2E29000B22287 /* firstOptionViewController.swift in Sources */,
