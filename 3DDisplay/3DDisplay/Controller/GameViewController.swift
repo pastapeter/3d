@@ -57,6 +57,7 @@ class GameViewController: UIViewController {
       return
     }
     let box = SCNBox(width: cubeInfo.size.width, height: cubeInfo.size.height, length: cubeInfo.size.length, chamferRadius: 0)
+    box.firstMaterial?.transparency = cubeInfo.transparency
     let boxNode = SCNNode(geometry: box)
     boxNode.geometry?.firstMaterial?.diffuse.contents = cubeInfo.image
     boxNode.position = cubeInfo.position
@@ -65,6 +66,7 @@ class GameViewController: UIViewController {
     
     let sphere = SCNSphere(radius: 0.5)
     sphere.firstMaterial?.diffuse.contents = sphereInfo.color
+    sphere.firstMaterial?.transparency = sphereInfo.transparency
     let node = SCNNode(geometry: sphere)
     node.scale.x = Float(sphereInfo.radius)
     node.scale.y = Float(sphereInfo.height)
@@ -75,6 +77,7 @@ class GameViewController: UIViewController {
     
     let cylinder = SCNCylinder(radius: cylinderInfo.size.radius, height: cylinderInfo.size.height)
     cylinder.firstMaterial?.diffuse.contents = cylinderInfo.image
+    cylinder.firstMaterial?.transparency = cylinderInfo.transparency
     let cylinderNode = SCNNode(geometry: cylinder)
     cylinderNode.name = cylinderInfo.name
     cylinderNode.position = cylinderInfo.position

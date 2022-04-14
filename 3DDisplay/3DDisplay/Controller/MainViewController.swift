@@ -21,9 +21,6 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var transparency: CGFloat = 1.0 {
     didSet {
       setupTransparency(alpha: transparency)
-      cubeInfo.transparency = transparency
-      sphereInfo.transparency = transparency
-      cylinderInfo.transparency = transparency
     }
   }
   
@@ -243,6 +240,7 @@ extension MainViewController: UITableViewDataSource {
         cell.presentColorPicker = { [weak self] in
           guard let self = self else {return}
           cell.colorViewController!.delegate = self
+          cell.colorViewController?.supportsAlpha = false
           self.present(cell.colorViewController!, animated: true, completion: nil)
         }
         // MARK: - Material indexpath 4, 7
@@ -443,6 +441,9 @@ extension MainViewController {
     nodes.forEach { node in
       node.geometry?.firstMaterial?.transparency = 1 / (7 - alpha)
     }
+    cubeInfo.transparency = 1 / (7 - alpha)
+    sphereInfo.transparency = 1 / (7 - alpha)
+    cylinderInfo.transparency = 1 / (7 - alpha)
   }
   
 }
