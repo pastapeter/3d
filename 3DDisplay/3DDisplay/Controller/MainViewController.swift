@@ -312,22 +312,16 @@ extension MainViewController: UITableViewDataSource {
           self.move(focusName: "sphere") { self.move(focusName: $0)}
           self.sphereScaleUp(radius: CGFloat(self.datasource[3].value ?? 1),
                              height: CGFloat(self.datasource[2].value ?? 1))
-          self.sphereInfo.radius = CGFloat(self.datasource[3].value ?? 1)
-          self.sphereInfo.height = CGFloat(self.datasource[2].value ?? 1)
+         
         } else if indexPath.row == 5 || indexPath.row == 6 {
           self.move(focusName: "cube") { self.move(focusName: $0)}
           self.heightScaleUp(height: CGFloat(self.datasource[5].value ?? 1),
                              width: CGFloat(self.datasource[6].value ?? 1),
                              length: CGFloat(self.datasource[6].value ?? 1))
-          self.cubeInfo.size = ( width: CGFloat(self.datasource[6].value ?? 1),
-                                 height: CGFloat(self.datasource[5].value ?? 1),
-                                length: CGFloat(self.datasource[6].value ?? 1))
         } else {
           self.move(focusName: "cylinder") { self.move(focusName: $0)}
           self.cylinderScaleUp(height: CGFloat(self.datasource[8].value ?? 1),
                                radius: CGFloat(self.datasource[9].value ?? 1))
-          self.cylinderInfo.size = (radius: CGFloat(self.datasource[9].value ?? 1),
-                                    height: CGFloat(self.datasource[8].value ?? 1))
         }
       }
     }
@@ -401,6 +395,7 @@ extension MainViewController {
       box.width = newWidth
       box.height = newHeight
     }
+    self.cubeInfo.size = (width, height, length)
     cube.runAction(action2)
   }
   
@@ -416,6 +411,7 @@ extension MainViewController {
       cylinder.height = newHeight
       cylinder.radius = newRadius
     }
+    self.cylinderInfo.size = (radius / 2, height)
     cylinder.runAction(action)
   }
   
@@ -434,6 +430,8 @@ extension MainViewController {
       node.scale.z = Float(oldZ + (Float(radius) - oldZ) * Float(percentage))
       
     }
+    self.sphereInfo.radius = radius
+    self.sphereInfo.height = height
     sphere.runAction(action)
   }
   
