@@ -63,9 +63,12 @@ class GameViewController: UIViewController {
     boxNode.name = cubeInfo.name
     scnScene.rootNode.addChildNode(boxNode)
     
-    let sphere = SCNSphere(radius: sphereInfo.radius)
+    let sphere = SCNSphere(radius: 0.5)
     sphere.firstMaterial?.diffuse.contents = sphereInfo.color
     let node = SCNNode(geometry: sphere)
+    node.scale.x = Float(sphereInfo.radius)
+    node.scale.y = Float(sphereInfo.height)
+    node.scale.z = Float(sphereInfo.radius)
     node.name = sphereInfo.name
     node.position = sphereInfo.position
     scnScene.rootNode.addChildNode(node)
