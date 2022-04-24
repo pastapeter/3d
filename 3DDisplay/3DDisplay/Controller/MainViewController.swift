@@ -8,6 +8,7 @@
 import UIKit
 import SceneKit
 import ModelIO
+import RealmSwift
 
 class MainViewController: UIViewController, StoryboardInstantiable {
   
@@ -32,7 +33,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     Question(questionTitle: "Material", material: "leather"), // cube 4
     Question(questionTitle: "2-5. How important was the material+finish in the selection of the product?", value: 1), // 5
     Question(questionTitle: "2-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1), // 6
-    Question(questionTitle: "Material / Finish ", material: "leather", finish: Finish.Brushed), // cylinder 7
+    Question(questionTitle: "Finish ", finish: Finish.Brushed), // cylinder 7
     Question(questionTitle: "3-5. How important was the material+finish in the selection of the product?", value: 1), // 8
     Question(questionTitle: "3-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1) //9
   ]
@@ -52,6 +53,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var cubeInfo = CubeInfo(image: UIImage(), size: (width: 1, height: 1, length: 1))
   var sphereInfo = SphereInfo()
   var cylinderInfo = CylinderInfo(image: UIImage())
+  var totalModel: TotalModel?
   
   // MARK: - LifeCycle
   
@@ -64,6 +66,11 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     spawnShape()
     transparency = 1 / 6
   }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    getObject()
+  }
 
   func setupView() {
     // 1
@@ -73,7 +80,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     // 3
     scnView.autoenablesDefaultLighting = true
     // 4
-    
+    scnView.backgroundColor = UIColor(hex: "f9fbfb")
   }
   
   func setupScene() {
@@ -98,7 +105,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     //    let node = SCNNode(mdlObject: object)
     let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
     let boxNode = SCNNode(geometry: box)
-    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "plastic")
+//    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "glossy")
     boxNode.position = SCNVector3(1,1,0)
     cubePoint = boxNode.position
     boxNode.name = "cube"
@@ -114,7 +121,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     
     
     let cylinder = SCNCylinder(radius: 0.5, height: 1)
-    cylinder.firstMaterial?.diffuse.contents = UIImage(named: datasource[6].material ?? "plastic")
+    cylinder.firstMaterial?.diffuse.contents = UIImage(named: datasource[6].material ?? "glossy")
     let cylinderNode = SCNNode(geometry: cylinder)
     cylinderNode.name = "cylinder"
     cylinderNode.position = SCNVector3(boxNode.position.x + 6, boxNode.position.y, boxNode.position.z)
@@ -147,29 +154,47 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   // MARK: - IBAction
   
   @IBAction func didTapShareButton(_ sender: Any) {
-    guard let geometry = scnScene.rootNode.childNode(withName: "test", recursively: true)?.geometry else {return }
     
-    let fixedFilenameOBJ = String("MyGeometryObject.obj")
-    let fixedFilenameMTL = String("MyGeometryObject.mtl")
+    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!.geometry!
+    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!.geometry!
+    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!.geometry!
     
+    let dateFormatterGet = DateFormatter()
+    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    let timestamp = dateFormatterGet.string(from: Date())
+
+    let fixedFilenameOBJ = timestamp + ".obj"
+
     let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
-    let fullPathMTL = getDocumentsDirectory().appendingPathComponent(fixedFilenameMTL) // for the MTL file
-    
-    let mesh = MDLMesh(scnGeometry: geometry)
+
+    let cubeMesh = MDLMesh(scnGeometry: cube)
+    let sphereMesh = MDLMesh(scnGeometry: sphere)
+    let cylinderMesh = MDLMesh(scnGeometry: cylinder)
     let asset = MDLAsset()
-    asset.add(mesh)
+    asset.add(cubeMesh)
+    asset.add(sphereMesh)
+    asset.add(cylinderMesh)
     
     do {
-      let my3d = try asset.export(to: fullPathOBJ)
+//      let my3d = try asset.export(to: fullPathOBJ)
+      let realm = try Realm()
       
-      let totalModel = totalModel(domain: domain,
+      totalModel = TotalModel(domain: domain,
                                   importanceForColor: datasource[1].value ?? 1,
                                   FunctionalAndEmotionalForColor: datasource[2].value ?? 1,
                                   importanceForMaterial: datasource[4].value ?? 1,
-                                  FunctionalAndEmotionalForMaterial: datasource[5].value ?? 1,
-                                  URL: fullPathOBJ
+                                  FunctionalAndEmotionalForMaterial: datasource[5].value ?? 1
       )
+
+      guard let totalModel = totalModel else {
+        return
+      }
       
+      
+      try! realm.write({
+        realm.add(ObjectModel(totalModel: totalModel, cube: cubeInfo, sphere: sphereInfo, cylinder: cylinderInfo))
+      })
+
     } catch {
       print("Couldn't create file(s)")
       return
@@ -182,7 +207,8 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     let vc = storyboard.instantiateViewController(identifier: "GameViewController") as! GameViewController
     vc.cubeInfo = cubeInfo
     vc.cylinderInfo = cylinderInfo
-    vc.sphereInfo = sphereInfo    
+    vc.sphereInfo = sphereInfo
+    vc.totalModel = totalModel
     self.navigationController?.pushViewController(vc, animated: true)
   }
   
@@ -268,17 +294,17 @@ extension MainViewController: UITableViewDataSource {
             cube.geometry?.firstMaterial?.diffuse.contents = image
           }
         } else {
+          cell.questionTextfield.isHidden = true
           cell.updateUI = { [weak self] (value, finish) in
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value
             self.datasource[indexPath.row].finish = finish
             self.move(focusName: "cylinder") { self.move(focusName: $0, completion: { _ in}) }
             let cylinder = self.scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!
-            let material = self.datasource[indexPath.row].material ?? "Wood"
             let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            guard let image = UIImage(named: material+finish.rawValue) else {return}
+            guard let image = UIImage(named: finish.rawValue) else {return}
             self.cylinderInfo.image = image
             cylinder.geometry?.firstMaterial?.diffuse.contents = image
           }
@@ -462,9 +488,20 @@ extension MainViewController: UIColorPickerViewControllerDelegate {
 
 // MARK: - Private
 extension MainViewController {
+  func getObject() {
+    do {
+      let realm = try Realm()
+      let result = Array(realm.objects(ObjectModel.self))
+    } catch {
+      print(error.localizedDescription)
+    }
+  }
+}
+
+extension MainViewController {
   private func getDocumentsDirectory() -> URL {
-    let paths = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-    return paths // paths[0]
+    let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+    return paths[0] // paths[0]
   }
 }
 

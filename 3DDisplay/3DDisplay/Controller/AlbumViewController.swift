@@ -24,9 +24,19 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     return collectionView
   }()
-  
-  var datasource: [Int] = [1,2,3,4,5,6,7]
 
+  var modelDatasource: [ObjectModel] = []
+  
+  init(datasource: [ObjectModel]) {
+    self.modelDatasource = datasource
+    print(datasource)
+    super.init(nibName: nil, bundle: nil)
+  }
+  
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     collectionView.dataSource = self
@@ -50,13 +60,48 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumCollectionViewCell.identifier, for: indexPath) as? AlbumCollectionViewCell else {
       return AlbumCollectionViewCell()
     }
+    
+    let item = modelDatasource[indexPath.row]
+    guard let sphere = cell.sphere, let box = cell.box, let cylinder = cell.cylinder else {return cell}
+    guard let sphereNode = cell.node, let boxNode = cell.boxNode, let cylinderNode = cell.cylinderNode else {return cell}
+    
+    //Information
+    
+    
+    //Transparency
+    sphere.firstMaterial?.transparency = CGFloat(item.sphere?.transparency ?? 1.0)
+    box.firstMaterial?.transparency = CGFloat(item.cube?.transparency ?? 1.0)
+    cylinder.firstMaterial?.transparency = CGFloat(item.cylinder?.transparency ?? 1.0)
       
+    //Color & Image
+    var colorRGB = item.sphere!.color.split(separator: " ").map { CGFloat(Float($0)!)}
+    sphere.firstMaterial?.diffuse.contents = UIColor(red: colorRGB[0], green: colorRGB[1], blue: colorRGB[2], alpha: colorRGB[3])
+    box.firstMaterial?.diffuse.contents = UIImage(data: item.cube?.image ?? Data())
+    cylinder.firstMaterial?.diffuse.contents = UIImage(data: item.cylinder?.image ?? Data())
+    
+    //Size
+    box.width = CGFloat(item.cube?.size?.width ?? 1.0)
+    box.height = CGFloat(item.cube?.size?.height ?? 1.0)
+    box.length = CGFloat(item.cube?.size?.length ?? 1.0)
+    
+    cylinder.radius = CGFloat(item.cylinder?.size?.radius ?? 1.0)
+    cylinder.height = CGFloat(item.cylinder?.size?.height ?? 1.0)
+    
+    sphereNode.scale.x = item.sphere?.size?.radius ?? 1.0
+    sphereNode.scale.y = item.sphere?.size?.height ?? 1.0
+    sphereNode.scale.z = item.sphere?.size?.radius ?? 1.0
+    
+    //position
+    sphereNode.position = item.sphere?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
+    boxNode.position = item.cube?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
+    cylinderNode.position = item.cylinder?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
+    
     return cell
   }
   
   
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return datasource.count
+    return modelDatasource.count
   }
   
 }

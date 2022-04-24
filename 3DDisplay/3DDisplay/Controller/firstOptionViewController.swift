@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import RealmSwift
 
 enum Domain: String, CaseIterable {
   case Electronic
@@ -32,12 +33,29 @@ class firstOptionViewController: UIViewController {
   }
   
   @IBAction func gotoResult(_ sender: UIButton) {
-    self.present(AlbumViewController(), animated: true)
+    do {
+      let model = try self.getObject()
+      
+      self.present(AlbumViewController(datasource: model), animated: true)
+    } catch {
+      print(error.localizedDescription)
+    }
   }
   
-  func setup() {
+  private func setup() {
     everyObject.textColor = .label.withAlphaComponent(0.9)
     domainTitle.textColor = .label.withAlphaComponent(0.9)
+  }
+  
+  private func getObject() throws -> [ObjectModel]{
+    do {
+      let realm = try Realm()
+      let result = Array(realm.objects(ObjectModel.self))
+      return result
+    } catch {
+      print(error.localizedDescription)
+      return []
+    }
   }
   
 }

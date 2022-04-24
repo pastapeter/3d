@@ -10,7 +10,7 @@ import SceneKit
 
 struct CubeInfo {
   var position: SCNVector3 = SCNVector3(x: 1, y: 1, z: 0)
-  var image: UIImage = UIImage()
+  var image: UIImage = UIImage(named: "glossy")!
   var name: String = "cube"
   var size: (width: CGFloat, height: CGFloat, length: CGFloat)
   var transparency: CGFloat = 1
@@ -27,7 +27,7 @@ struct SphereInfo {
 
 struct CylinderInfo {
   var position: SCNVector3 = SCNVector3(x: 7, y: 1, z: 0)
-  var image: UIImage = UIImage()
+  var image: UIImage = UIImage(named: "glossy")!
   var name: String = "cylinder"
   var size: (radius: CGFloat, height: CGFloat) = (radius: 0.5, height: 1)
   var transparency: CGFloat = 1

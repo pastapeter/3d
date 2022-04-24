@@ -7,11 +7,11 @@
 
 import Foundation
 
-struct totalModel {
+struct TotalModel {
   var domain: String
   var importanceForColor: Int
   var FunctionalAndEmotionalForColor: Int
   var importanceForMaterial: Int
   var FunctionalAndEmotionalForMaterial: Int
-  var URL: URL
+//  var URL: URL
 }

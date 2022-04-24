@@ -94,8 +94,8 @@ extension QuestionTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     if  questionTextfield.isFirstResponder {
       return textureDic.count
     } else {
-      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return 0}
-      return arr.count
+//      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return 0}
+      return Finish.allCases.count
     }
   }
   
@@ -104,8 +104,9 @@ extension QuestionTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     if  questionTextfield.isFirstResponder {
       return Array(textureDic.keys.map{String($0)})[row]
     } else {
-      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return nil}
-      return arr[row].rawValue
+//      guard let arr = textureDic[questionTextfield.text ?? "Wood"] else { return nil}
+//      return arr[row].rawValue
+      return Finish.allCases[row].rawValue
     }
     
   }
@@ -114,7 +115,8 @@ extension QuestionTableViewCell: UIPickerViewDelegate, UIPickerViewDataSource {
     if questionTextfield.isFirstResponder {
       questionTextfield.text = Array(textureDic.keys.map{String($0)})[row]
     } else {
-      finishTextField.text = textureDic[questionTextfield.text ?? "Wood"]![row].rawValue
+//      finishTextField.text = textureDic[questionTextfield.text ?? "Wood"]![row].rawValue
+      finishTextField.text = Finish.allCases[row].rawValue
     }
       
   }

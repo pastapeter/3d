@@ -13,13 +13,29 @@ class AlbumCollectionViewCell: UICollectionViewCell {
   
   static let identifier = "AlbumCollectionViewCell"
   static let nibName = "AlbumCollectionViewCell"
+  
   var scnScene: SCNScene!
   var scnNode: SCNNode!
   var cameraNode: SCNNode!
+  
   @IBOutlet weak var sceneView: SCNView!
   @IBOutlet weak var domainLabel: UILabel!
   @IBOutlet weak var importanceLabel: UILabel!
   @IBOutlet weak var FunctionalLabel: UILabel!
+  
+  var transparency: CGFloat = 1.0
+  var cylinderSize: (Float, Float) = (0.0, 0.0)
+  var cylinderImage: Data?
+  var sphereSize: (Float, Float) = (0.0, 0.0) // (radius, height)
+  var sphereColor: UIColor = .red
+  
+//  var boxSize
+  var sphere: SCNSphere?
+  var node: SCNNode?
+  var cylinder: SCNCylinder?
+  var cylinderNode: SCNNode?
+  var box: SCNBox?
+  var boxNode: SCNNode?
   
   
   override func awakeFromNib() {
@@ -39,6 +55,7 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     // 3
     sceneView.autoenablesDefaultLighting = true
     
+    sceneView.backgroundColor = UIColor(hex: "f9fbfb")
   }
   
   func setupScene() {
@@ -49,25 +66,48 @@ class AlbumCollectionViewCell: UICollectionViewCell {
   func setupCamera() {
     cameraNode = SCNNode()
     cameraNode.camera = SCNCamera()
-    cameraNode.position = SCNVector3(x: 0, y: 7, z: 8)
+    cameraNode.position = SCNVector3(x: 4, y: 7, z: 8)
     cameraNode.eulerAngles = SCNVector3(-0.7, 0, 0)
     scnScene.rootNode.addChildNode(cameraNode)
   }
   
   func spawnShape() {
-    //    let path = Bundle.main.path(forResource: "test", ofType: "obj")
-    //    let url = URL(fileURLWithPath: path!)
-    //    let asset = MDLAsset(url: url)
     
-    //    guard let object = asset.object(at: 0) as? MDLMesh else {return}
-    //    let node = SCNNode(mdlObject: object)
-    let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
-    let node = SCNNode(geometry: box)
+    box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
+    boxNode = SCNNode(geometry: box)
+    guard let boxNode = boxNode else {
+      return
+    }
+    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage()
+    boxNode.position = SCNVector3(1,1,0)
+    boxNode.name = "cube"
+    boxNode.geometry?.firstMaterial?.transparency = transparency
+    scnScene.rootNode.addChildNode(boxNode)
+    
+    sphere = SCNSphere(radius: 0.5)
+    node = SCNNode(geometry: sphere)
+    guard let node = node else {
+      return
+    }
     node.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-    node.scale = SCNVector3(1, 1, 1)
-    node.name = "test"
+    node.name = "sphere"
+    node.geometry?.firstMaterial?.transparency = transparency
+    node.geometry?.firstMaterial?.diffuse.contents = sphereColor
+    node.position = SCNVector3(boxNode.position.x + 3, boxNode.position.y, boxNode.position.z + 3)
     scnScene.rootNode.addChildNode(node)
+    
+    cylinder = SCNCylinder(radius: 0.5, height: 1)
+    cylinderNode = SCNNode(geometry: cylinder)
+    guard let cylinderNode = cylinderNode else {
+      return
+    }
+    cylinderNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "Glossy")
+    cylinderNode.name = "cylinder"
+    cylinderNode.geometry?.firstMaterial?.transparency = transparency
+    cylinderNode.geometry?.firstMaterial?.diffuse.contents = UIImage(data: cylinderImage ?? Data())
+    cylinderNode.position = SCNVector3(boxNode.position.x + 6, boxNode.position.y, boxNode.position.z)
+    scnScene.rootNode.addChildNode(cylinderNode)
+    
   }
-  
   
 }
