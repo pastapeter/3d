@@ -46,7 +46,7 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     view.addSubview(collectionView)
     collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
     collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
-    collectionView.topAnchor.constraint(equalTo: self.view.topAnchor).isActive = true
+    collectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 20).isActive = true
     collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     
   }

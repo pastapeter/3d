@@ -97,19 +97,7 @@ class GameViewController: UIViewController {
   }
   
   @IBAction func didTapSaveButton(_ sender: UIBarButtonItem) {
-    
-//    guard let geometry = scnScene.rootNode.childNode(withName: "test", recursively: true)?.geometry else {return }
-//
-//    let fixedFilenameOBJ = String("MyGeometryObject.obj")
-//    let fixedFilenameMTL = String("MyGeometryObject.mtl")
-//
-//    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
-//    let fullPathMTL = getDocumentsDirectory().appendingPathComponent(fixedFilenameMTL) // for the MTL file
-//
-//    let mesh = MDLMesh(scnGeometry: geometry)
-//    let asset = MDLAsset()
-//    asset.add(mesh)
-    
+  
     do {
       let realm = try Realm()
       guard let totalModel = totalModel else { return }

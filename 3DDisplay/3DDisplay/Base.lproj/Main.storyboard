@@ -49,7 +49,7 @@
                     </sceneKitView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="YN8-i1-pKb">
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="Y96-Qb-mER"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Y96-Qb-mER"/>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
@@ -66,7 +66,8 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="W0p-T9-qhO">
-                                <rect key="frame" x="185.5" y="771" width="43" height="30"/>
+                                <rect key="frame" x="188" y="771" width="38" height="30"/>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Result"/>
                                 <connections>
@@ -95,6 +96,12 @@
                                 <color key="textColor" white="0.0" alpha="0.90000000000000002" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4fH-We-qtN">
+                                <rect key="frame" x="184" y="806" width="46" height="30"/>
+                                <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
+                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                <state key="normal" title="Result2"/>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="e2t-cv-Iun"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -103,8 +110,10 @@
                             <constraint firstItem="W0p-T9-qhO" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="3Sh-dz-9CX"/>
                             <constraint firstItem="q0C-yz-NBs" firstAttribute="centerY" secondItem="4Ea-VE-rRf" secondAttribute="centerY" constant="25" id="MVH-Qx-X2L"/>
                             <constraint firstItem="ape-BV-gg3" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="TnC-LZ-PSM"/>
+                            <constraint firstItem="4fH-We-qtN" firstAttribute="top" secondItem="W0p-T9-qhO" secondAttribute="bottom" constant="5" id="Y7q-BE-fxU"/>
                             <constraint firstItem="e2t-cv-Iun" firstAttribute="bottom" secondItem="W0p-T9-qhO" secondAttribute="bottom" constant="61" id="eyi-RG-O5K"/>
                             <constraint firstItem="q0C-yz-NBs" firstAttribute="top" secondItem="ape-BV-gg3" secondAttribute="bottom" constant="-6" id="jBd-rQ-hqb"/>
+                            <constraint firstItem="4fH-We-qtN" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="n6K-ba-fsA"/>
                             <constraint firstItem="ape-BV-gg3" firstAttribute="top" secondItem="Lb4-DU-7d4" secondAttribute="bottom" constant="40.5" id="qQ9-2b-u99"/>
                             <constraint firstItem="q0C-yz-NBs" firstAttribute="centerX" secondItem="4Ea-VE-rRf" secondAttribute="centerX" id="sUB-pT-Rf5"/>
                         </constraints>
@@ -216,7 +225,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="27a-R2-PhG">
                         <rightBarButtonItems>
-                            <barButtonItem systemItem="action" id="aYy-tv-XEE">
+                            <barButtonItem systemItem="save" id="aYy-tv-XEE">
                                 <connections>
                                     <action selector="didTapShareButton:" destination="C9K-3r-TxE" id="ti0-fm-PSE"/>
                                 </connections>

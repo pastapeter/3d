@@ -77,8 +77,8 @@ class QuestionTableViewCell: UITableViewCell {
   }
   
   func setupFont() {
-    questionLabel.font = UIFont(name: "Gill Sans", size: 21)
-    questionValueLabel.font = UIFont(name: "Gill Sans", size: 21)
+    questionLabel.font = UIFont(name: "Gill Sans", size: 18)
+    questionValueLabel.font = UIFont(name: "Gill Sans", size: 18)
     questionLabel.textColor = .label.withAlphaComponent(0.9)
     questionValueLabel.textColor = .label.withAlphaComponent(0.9)
   }
