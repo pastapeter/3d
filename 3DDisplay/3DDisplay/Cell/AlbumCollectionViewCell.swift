@@ -20,9 +20,31 @@ class AlbumCollectionViewCell: UICollectionViewCell {
   
   @IBOutlet weak var sceneView: SCNView!
   @IBOutlet weak var domainLabel: UILabel!
-  @IBOutlet weak var importanceLabel: UILabel!
-  @IBOutlet weak var FunctionalLabel: UILabel!
+  @IBOutlet weak var timeLabel: UILabel!
   
+  @IBOutlet weak var colorHexLabel: UILabel!
+  @IBOutlet weak var materialLabel: UILabel!
+  @IBOutlet weak var finishLabel: UILabel!
+  
+  @IBOutlet var importanceLabels: [UILabel]!
+  @IBOutlet var funcEmoLabels: [UILabel]!
+  
+  var importanceArray: [String] = [] {
+    didSet {
+      for i in importanceArray.indices {
+        importanceLabels[i].text = importanceArray[i]
+      }
+    }
+  }
+  
+  var funcEmoArray: [String] = [] {
+    didSet {
+      for i in funcEmoArray.indices {
+        funcEmoLabels[i].text = funcEmoArray[i]
+      }
+    }
+  }
+
   var transparency: CGFloat = 1.0
   var cylinderSize: (Float, Float) = (0.0, 0.0)
   var cylinderImage: Data?
@@ -111,3 +133,4 @@ class AlbumCollectionViewCell: UICollectionViewCell {
   }
   
 }
+

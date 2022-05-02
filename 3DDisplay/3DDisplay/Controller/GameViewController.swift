@@ -145,6 +145,13 @@ extension GameViewController {
       }
       targetNode.localTranslate(by: movementVector)
       self.lastPanLocation = worldTouchPosition
+      if targetNode.name == "sphere", var sphereInfo = sphereInfo {
+        sphereInfo.position = self.lastPanLocation
+      } else if targetNode.name == "cube", var cubeInfo = cubeInfo {
+        cubeInfo.position = self.lastPanLocation
+      } else if targetNode.name == "cylinder", var cylinderInfo = cylinderInfo {
+        cylinderInfo.position = self.lastPanLocation
+      }
     case .ended:
       targetNode = nil
     default:

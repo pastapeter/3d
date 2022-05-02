@@ -17,7 +17,7 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     layout.minimumInteritemSpacing = 10
     
     var twoCard = (UIScreen.main.bounds.width / 2) - 20
-    layout.itemSize = CGSize(width: twoCard, height: twoCard * 1.5)
+    layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 40 , height: twoCard * 1.5)
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.register(UINib(nibName: AlbumCollectionViewCell.nibName, bundle: nil), forCellWithReuseIdentifier: AlbumCollectionViewCell.identifier)
@@ -65,9 +65,6 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     guard let sphere = cell.sphere, let box = cell.box, let cylinder = cell.cylinder else {return cell}
     guard let sphereNode = cell.node, let boxNode = cell.boxNode, let cylinderNode = cell.cylinderNode else {return cell}
     
-    //Information
-    
-    
     //Transparency
     sphere.firstMaterial?.transparency = CGFloat(item.sphere?.transparency ?? 1.0)
     box.firstMaterial?.transparency = CGFloat(item.cube?.transparency ?? 1.0)
@@ -75,7 +72,8 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
       
     //Color & Image
     var colorRGB = item.sphere!.color.split(separator: " ").map { CGFloat(Float($0)!)}
-    sphere.firstMaterial?.diffuse.contents = UIColor(red: colorRGB[0], green: colorRGB[1], blue: colorRGB[2], alpha: colorRGB[3])
+    let color = UIColor(red: colorRGB[0], green: colorRGB[1], blue: colorRGB[2], alpha: colorRGB[3])
+    sphere.firstMaterial?.diffuse.contents = color
     box.firstMaterial?.diffuse.contents = UIImage(data: item.cube?.image ?? Data())
     cylinder.firstMaterial?.diffuse.contents = UIImage(data: item.cylinder?.image ?? Data())
     
@@ -96,6 +94,15 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     boxNode.position = item.cube?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
     cylinderNode.position = item.cylinder?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
     
+    //Information
+    cell.domainLabel.text = item.domain
+    cell.colorHexLabel.text = hexStringFromColor(color: color)
+    cell.materialLabel.text = item.cube!.imageName
+    cell.finishLabel.text = item.cylinder!.imageName
+    cell.importanceArray = ["\(Int(item.sphere!.size!.radius ?? 0))", "\(Int(item.cube!.size!.width ?? 0))", "\(Int(item.cylinder!.size?.radius ?? 0))"]
+    cell.funcEmoArray = ["\(Int(item.sphere!.size!.height ?? 0))", "\(Int(item.cube!.size!.height ?? 0))", "\(Int(item.cylinder!.size?.height ?? 0))"]
+    cell.timeLabel.text = item.time
+    
     return cell
   }
   
@@ -103,5 +110,15 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
   func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
     return modelDatasource.count
   }
+  
+  func hexStringFromColor(color: UIColor) -> String {
+      let components = color.cgColor.components
+      let r: CGFloat = components?[0] ?? 0.0
+      let g: CGFloat = components?[1] ?? 0.0
+      let b: CGFloat = components?[2] ?? 0.0
+
+      let hexString = String.init(format: "#%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
+      return hexString
+   }
   
 }

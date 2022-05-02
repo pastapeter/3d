@@ -20,6 +20,7 @@
 		28D8448827B8272500F4C3B9 /* QuestionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D8447F27B8272500F4C3B9 /* QuestionTableViewCell.swift */; };
 		28D8448927B8272500F4C3B9 /* ShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D8448027B8272500F4C3B9 /* ShapeType.swift */; };
 		28D8448F27B8273000F4C3B9 /* GeometryFighter.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */; };
+		B1073FA1281F6237007882C5 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1073FA0281F6237007882C5 /* Date+.swift */; };
 		B15E34FD2805EA93005D588A /* HowLong.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FC2805EA93005D588A /* HowLong.swift */; };
 		B15E34FF2806C396005D588A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FE2806C396005D588A /* GameViewController.swift */; };
 		B15E35012807EAD9005D588A /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E35002807EAD9005D588A /* Question.swift */; };
@@ -72,6 +73,7 @@
 		28D8447F27B8272500F4C3B9 /* QuestionTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionTableViewCell.swift; sourceTree = "<group>"; };
 		28D8448027B8272500F4C3B9 /* ShapeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeType.swift; sourceTree = "<group>"; };
 		28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GeometryFighter.scnassets; sourceTree = "<group>"; };
+		B1073FA0281F6237007882C5 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
 		B15E34FC2805EA93005D588A /* HowLong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowLong.swift; sourceTree = "<group>"; };
 		B15E34FE2806C396005D588A /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		B15E35002807EAD9005D588A /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 				285D0DD027E2E55500B22287 /* StoryboardInit.swift */,
 				285D0DD227E30FB600B22287 /* Constant.swift */,
 				B1B9AEC527F03907006E01E1 /* SceneKit Scene.scn */,
+				B1073FA0281F6237007882C5 /* Date+.swift */,
 			);
 			path = 3DDisplay;
 			sourceTree = "<group>";
@@ -171,8 +174,8 @@
 			isa = PBXGroup;
 			children = (
 				B15E34FE2806C396005D588A /* GameViewController.swift */,
-				285D0DCE27E2E29000B22287 /* firstOptionViewController.swift */,
 				B1B9AEC327F03615006E01E1 /* MainViewController.swift */,
+				285D0DCE27E2E29000B22287 /* firstOptionViewController.swift */,
 				B1615EA227F3460400DC4E63 /* AlbumViewController.swift */,
 			);
 			path = Controller;
@@ -346,6 +349,7 @@
 				B15E35032807EAF0005D588A /* Direction.swift in Sources */,
 				B1615EA627F3463500DC4E63 /* TextureTableViewCell.swift in Sources */,
 				B1615EAB27F3477400DC4E63 /* AlbumCollectionViewCell.swift in Sources */,
+				B1073FA1281F6237007882C5 /* Date+.swift in Sources */,
 				285D0DCF27E2E29000B22287 /* firstOptionViewController.swift in Sources */,
 				B1B9AEC427F03615006E01E1 /* MainViewController.swift in Sources */,
 				B15E34FF2806C396005D588A /* GameViewController.swift in Sources */,

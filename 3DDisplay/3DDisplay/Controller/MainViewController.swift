@@ -81,6 +81,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     scnView.autoenablesDefaultLighting = true
     // 4
     scnView.backgroundColor = UIColor(hex: "f9fbfb")
+//    scnView.scene?.background.contents = UIImage(named: "여")
   }
   
   func setupScene() {
@@ -155,25 +156,25 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   
   @IBAction func didTapShareButton(_ sender: Any) {
     
-    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!.geometry!
-    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!.geometry!
-    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!.geometry!
-    
-    let dateFormatterGet = DateFormatter()
-    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-    let timestamp = dateFormatterGet.string(from: Date())
-
-    let fixedFilenameOBJ = timestamp + ".obj"
-
-    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
-
-    let cubeMesh = MDLMesh(scnGeometry: cube)
-    let sphereMesh = MDLMesh(scnGeometry: sphere)
-    let cylinderMesh = MDLMesh(scnGeometry: cylinder)
-    let asset = MDLAsset()
-    asset.add(cubeMesh)
-    asset.add(sphereMesh)
-    asset.add(cylinderMesh)
+//    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!.geometry!
+//    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!.geometry!
+//    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!.geometry!
+//
+//    let dateFormatterGet = DateFormatter()
+//    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
+//    let timestamp = dateFormatterGet.string(from: Date())
+//
+//    let fixedFilenameOBJ = timestamp + ".obj"
+//
+//    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
+//
+//    let cubeMesh = MDLMesh(scnGeometry: cube)
+//    let sphereMesh = MDLMesh(scnGeometry: sphere)
+//    let cylinderMesh = MDLMesh(scnGeometry: cylinder)
+//    let asset = MDLAsset()
+//    asset.add(cubeMesh)
+//    asset.add(sphereMesh)
+//    asset.add(cylinderMesh)
     
     do {
 //      let my3d = try asset.export(to: fullPathOBJ)
@@ -192,7 +193,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
       
       
       try! realm.write({
-        realm.add(ObjectModel(totalModel: totalModel, cube: cubeInfo, sphere: sphereInfo, cylinder: cylinderInfo))
+        realm.add(ObjectModel(time: Date(), totalModel: totalModel, cube: cubeInfo, sphere: sphereInfo, cylinder: cylinderInfo))
       })
 
     } catch {
@@ -289,6 +290,7 @@ extension MainViewController: UITableViewDataSource {
             //            let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
+            self.cubeInfo.name = material
             guard let image = UIImage(named: material) else {return}
             self.cubeInfo.image = image
             cube.geometry?.firstMaterial?.diffuse.contents = image
@@ -304,6 +306,7 @@ extension MainViewController: UITableViewDataSource {
             let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
+            self.cylinderInfo.name = finish.rawValue
             guard let image = UIImage(named: finish.rawValue) else {return}
             self.cylinderInfo.image = image
             cylinder.geometry?.firstMaterial?.diffuse.contents = image

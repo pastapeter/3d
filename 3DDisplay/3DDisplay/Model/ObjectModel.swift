@@ -15,6 +15,8 @@ class ObjectModel: Object {
   @Persisted(primaryKey: true) var id: ObjectId
   
   @Persisted var domain: String
+
+  @Persisted var time: String
   
   @Persisted var importanceForColor: Int
   
@@ -32,9 +34,10 @@ class ObjectModel: Object {
   
   @Persisted var cylinder: Cylinder?
   
-  convenience init(totalModel: TotalModel, cube: CubeInfo, sphere: SphereInfo, cylinder: CylinderInfo) {
+  convenience init(time: Date, totalModel: TotalModel, cube: CubeInfo, sphere: SphereInfo, cylinder: CylinderInfo) {
     self.init()
     self.domain = totalModel.domain
+    self.time = time.toString()
     self.importanceForColor = totalModel.importanceForColor
     self.FunctionalAndEmotionalForColor = totalModel.FunctionalAndEmotionalForColor
     self.importanceForMateiral = totalModel.importanceForMaterial
@@ -63,6 +66,7 @@ class Cube: Object {
   
   @Persisted var position: Position?
   @Persisted var image: Data?
+  @Persisted var imageName: String
   @Persisted var name: String
   @Persisted var size: Size?
   @Persisted var transparency: Float
@@ -70,8 +74,9 @@ class Cube: Object {
   convenience init(position: (x: Float, y: Float, z: Float), image: UIImage, name: String, size: (width: CGFloat, height: CGFloat, length: CGFloat), transparency: CGFloat) {
     self.init()
     self.position = Position(x: position.x, y: position.y, z: position.z)
+    self.imageName = name
     self.image = image.pngData()
-    self.name = name
+    self.name = "cube"
     self.transparency = Float(transparency)
     self.size = Size(width: Float(size.width), height: Float(size.height), radius: nil, length: Float(size.length))
     
@@ -103,6 +108,7 @@ class Cylinder: Object {
   @Persisted var position: Position?
   @Persisted var image: Data?
   @Persisted var name: String
+  @Persisted var imageName: String
   @Persisted var size: Size?
   @Persisted var transparency: Float
   
@@ -110,7 +116,8 @@ class Cylinder: Object {
     self.init()
     self.position = Position(x: position.x, y: position.y, z: position.z)
     self.image = image.pngData()
-    self.name = name
+    self.imageName = name
+    self.name = "cylinder"
     self.transparency = Float(transparency)
     self.size = Size(width: nil, height: Float(size.height), radius: Float(size.radius), length: nil)
   }
