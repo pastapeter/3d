@@ -21,6 +21,8 @@
 		28D8448927B8272500F4C3B9 /* ShapeType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28D8448027B8272500F4C3B9 /* ShapeType.swift */; };
 		28D8448F27B8273000F4C3B9 /* GeometryFighter.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */; };
 		B1073FA1281F6237007882C5 /* Date+.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1073FA0281F6237007882C5 /* Date+.swift */; };
+		B1073FA3281F649A007882C5 /* MovedModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1073FA2281F649A007882C5 /* MovedModel.swift */; };
+		B1073FA5281F65F3007882C5 /* MovedAlbumViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1073FA4281F65F3007882C5 /* MovedAlbumViewController.swift */; };
 		B15E34FD2805EA93005D588A /* HowLong.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FC2805EA93005D588A /* HowLong.swift */; };
 		B15E34FF2806C396005D588A /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E34FE2806C396005D588A /* GameViewController.swift */; };
 		B15E35012807EAD9005D588A /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = B15E35002807EAD9005D588A /* Question.swift */; };
@@ -74,6 +76,8 @@
 		28D8448027B8272500F4C3B9 /* ShapeType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeType.swift; sourceTree = "<group>"; };
 		28D8448E27B8272F00F4C3B9 /* GeometryFighter.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = GeometryFighter.scnassets; sourceTree = "<group>"; };
 		B1073FA0281F6237007882C5 /* Date+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+.swift"; sourceTree = "<group>"; };
+		B1073FA2281F649A007882C5 /* MovedModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovedModel.swift; sourceTree = "<group>"; };
+		B1073FA4281F65F3007882C5 /* MovedAlbumViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MovedAlbumViewController.swift; sourceTree = "<group>"; };
 		B15E34FC2805EA93005D588A /* HowLong.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HowLong.swift; sourceTree = "<group>"; };
 		B15E34FE2806C396005D588A /* GameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		B15E35002807EAD9005D588A /* Question.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
@@ -177,6 +181,7 @@
 				B1B9AEC327F03615006E01E1 /* MainViewController.swift */,
 				285D0DCE27E2E29000B22287 /* firstOptionViewController.swift */,
 				B1615EA227F3460400DC4E63 /* AlbumViewController.swift */,
+				B1073FA4281F65F3007882C5 /* MovedAlbumViewController.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -190,6 +195,7 @@
 				B15E35022807EAF0005D588A /* Direction.swift */,
 				B15E35042807F543005D588A /* GeometryInfos.swift */,
 				B17238A228088ED300DE4D5E /* ObjectModel.swift */,
+				B1073FA2281F649A007882C5 /* MovedModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -340,6 +346,7 @@
 				28D8448927B8272500F4C3B9 /* ShapeType.swift in Sources */,
 				B15E35012807EAD9005D588A /* Question.swift in Sources */,
 				B17238A328088ED300DE4D5E /* ObjectModel.swift in Sources */,
+				B1073FA3281F649A007882C5 /* MovedModel.swift in Sources */,
 				B1615EA327F3460400DC4E63 /* AlbumViewController.swift in Sources */,
 				285D0DD127E2E55500B22287 /* StoryboardInit.swift in Sources */,
 				28D8448827B8272500F4C3B9 /* QuestionTableViewCell.swift in Sources */,
@@ -353,6 +360,7 @@
 				285D0DCF27E2E29000B22287 /* firstOptionViewController.swift in Sources */,
 				B1B9AEC427F03615006E01E1 /* MainViewController.swift in Sources */,
 				B15E34FF2806C396005D588A /* GameViewController.swift in Sources */,
+				B1073FA5281F65F3007882C5 /* MovedAlbumViewController.swift in Sources */,
 				28D8444D27B8269E00F4C3B9 /* AppDelegate.swift in Sources */,
 				28D8444F27B8269E00F4C3B9 /* SceneDelegate.swift in Sources */,
 				285D0DD327E30FB600B22287 /* Constant.swift in Sources */,

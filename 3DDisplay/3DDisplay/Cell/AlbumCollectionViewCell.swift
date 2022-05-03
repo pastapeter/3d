@@ -26,6 +26,11 @@ class AlbumCollectionViewCell: UICollectionViewCell {
   @IBOutlet weak var materialLabel: UILabel!
   @IBOutlet weak var finishLabel: UILabel!
   
+  @IBOutlet weak var firstStackview: UIStackView!
+  @IBOutlet weak var secondStackView: UIStackView!
+  @IBOutlet weak var thirdStackView: UIStackView!
+  @IBOutlet weak var forthStackView: UIStackView!
+  
   @IBOutlet var importanceLabels: [UILabel]!
   @IBOutlet var funcEmoLabels: [UILabel]!
   

@@ -42,12 +42,11 @@ class ObjectModel: Object {
     self.FunctionalAndEmotionalForColor = totalModel.FunctionalAndEmotionalForColor
     self.importanceForMateiral = totalModel.importanceForMaterial
     self.FunctionalAndEmotionalForMaterial = totalModel.FunctionalAndEmotionalForMaterial
-//    self.URL = totalModel.URL.absoluteString
     self.cube = Cube(position: (x: cube.position.x, y: cube.position.y, z: cube.position.z),
                      image: cube.image,
                      name: cube.name,
                      size: (width: cube.size.width, height: cube.size.height, length: cube.size.length),
-                     transparency: cube.transparency)
+                     transparency: cube.transparency, imageName: cube.imageName)
     self.sphere = Sphere(position: (x: sphere.position.x, y: sphere.position.y, z: sphere.position.z),
                          color: sphere.color,
                          name: sphere.name,
@@ -57,7 +56,7 @@ class ObjectModel: Object {
                              image: cylinder.image,
                              name: cylinder.name,
                              size: (radius: cylinder.size.radius, height: cylinder.size.height),
-                             transparency: cylinder.transparency)
+                             transparency: cylinder.transparency, imageName: cylinder.imageName)
   }
     
 }
@@ -71,12 +70,12 @@ class Cube: Object {
   @Persisted var size: Size?
   @Persisted var transparency: Float
   
-  convenience init(position: (x: Float, y: Float, z: Float), image: UIImage, name: String, size: (width: CGFloat, height: CGFloat, length: CGFloat), transparency: CGFloat) {
+  convenience init(position: (x: Float, y: Float, z: Float), image: UIImage, name: String, size: (width: CGFloat, height: CGFloat, length: CGFloat), transparency: CGFloat, imageName: String) {
     self.init()
     self.position = Position(x: position.x, y: position.y, z: position.z)
-    self.imageName = name
+    self.imageName = imageName
     self.image = image.pngData()
-    self.name = "cube"
+    self.name = name
     self.transparency = Float(transparency)
     self.size = Size(width: Float(size.width), height: Float(size.height), radius: nil, length: Float(size.length))
     
@@ -112,12 +111,12 @@ class Cylinder: Object {
   @Persisted var size: Size?
   @Persisted var transparency: Float
   
-  convenience init(position: (x: Float, y: Float, z: Float), image: UIImage, name: String, size: (radius: CGFloat, height: CGFloat), transparency: CGFloat) {
+  convenience init(position: (x: Float, y: Float, z: Float), image: UIImage, name: String, size: (radius: CGFloat, height: CGFloat), transparency: CGFloat, imageName: String) {
     self.init()
     self.position = Position(x: position.x, y: position.y, z: position.z)
     self.image = image.pngData()
-    self.imageName = name
-    self.name = "cylinder"
+    self.imageName = imageName
+    self.name = name
     self.transparency = Float(transparency)
     self.size = Size(width: nil, height: Float(size.height), radius: Float(size.radius), length: nil)
   }

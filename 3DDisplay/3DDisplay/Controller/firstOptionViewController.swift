@@ -44,9 +44,9 @@ class firstOptionViewController: UIViewController {
   
   @IBAction func gotoResult2(_ sender: UIButton) {
     do {
-      let model = try self.getObject()
+      let model = try self.getMovedObjest()
       
-      self.present(AlbumViewController(datasource: model), animated: true)
+      self.present(MovedAlbumViewController(datasource: model), animated: true)
     } catch {
       print(error.localizedDescription)
     }
@@ -61,6 +61,17 @@ class firstOptionViewController: UIViewController {
     do {
       let realm = try Realm()
       let result = Array(realm.objects(ObjectModel.self))
+      return result
+    } catch {
+      print(error.localizedDescription)
+      return []
+    }
+  }
+  
+  private func getMovedObjest() throws -> [MovedModel] {
+    do {
+      let realm = try Realm()
+      let result = Array(realm.objects(MovedModel.self))
       return result
     } catch {
       print(error.localizedDescription)

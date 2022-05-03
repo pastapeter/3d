@@ -1,16 +1,15 @@
 //
-//  AlbumViewController.swift
+//  movedAlbumViewController.swift
 //  3DDisplay
 //
-//  Created by Jung peter on 2022/03/29.
+//  Created by Jung peter on 2022/05/01.
 //
 
 import UIKit
 import SceneKit
-import ModelIO
 
-class AlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-
+class MovedAlbumViewController: UIViewController, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+  
   let collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.minimumLineSpacing = 10
@@ -25,9 +24,9 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     return collectionView
   }()
 
-  var modelDatasource: [ObjectModel] = []
+  var modelDatasource: [MovedModel] = []
   
-  init(datasource: [ObjectModel]) {
+  init(datasource: [MovedModel]) {
     self.modelDatasource = datasource
     print(datasource)
     super.init(nibName: nil, bundle: nil)
@@ -50,7 +49,11 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     
   }
-
+  
+  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    return modelDatasource.count
+  }
+  
   func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
     
     guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: AlbumCollectionViewCell.identifier, for: indexPath) as? AlbumCollectionViewCell else {
@@ -91,30 +94,24 @@ class AlbumViewController: UIViewController, UICollectionViewDataSource, UIColle
     cylinderNode.position = item.cylinder?.position?.toVector() ?? SCNVector3(x: 0, y: 0, z: 0)
     
     //Information
-    cell.domainLabel.text = item.domain
-    cell.colorHexLabel.text = hexStringFromColor(color: color)
-    cell.materialLabel.text = item.cube!.imageName
-    cell.finishLabel.text = item.cylinder!.imageName
-    cell.importanceArray = ["\(Int(item.sphere!.size!.radius ?? 0))", "\(Int(item.cube!.size!.width ?? 0))", "\(Int(item.cylinder!.size?.radius ?? 0))"]
-    cell.funcEmoArray = ["\(Int(item.sphere!.size!.height ?? 0))", "\(Int(item.cube!.size!.height ?? 0))", "\(Int(item.cylinder!.size?.height ?? 0))"]
-    cell.timeLabel.text = item.time
+    cell.domainLabel.isHidden = true
+    cell.colorHexLabel.isHidden = true
+    cell.materialLabel.isHidden = true
+    cell.finishLabel.isHidden = true
+    cell.importanceLabels.forEach {
+      $0.isHidden = true
+    }
+    cell.funcEmoLabels.forEach {
+      $0.isHidden = true
+    }
+    cell.timeLabel.isHidden = true
+    cell.firstStackview.isHidden = true
+    cell.secondStackView.isHidden = true
+    cell.thirdStackView.isHidden = true
+    cell.forthStackView.isHidden = true
     
     return cell
   }
   
-  
-  func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-    return modelDatasource.count
-  }
-  
-  func hexStringFromColor(color: UIColor) -> String {
-      let components = color.cgColor.components
-      let r: CGFloat = components?[0] ?? 0.0
-      let g: CGFloat = components?[1] ?? 0.0
-      let b: CGFloat = components?[2] ?? 0.0
-
-      let hexString = String.init(format: "#%02lX%02lX%02lX", lroundf(Float(r * 255)), lroundf(Float(g * 255)), lroundf(Float(b * 255)))
-      return hexString
-   }
   
 }

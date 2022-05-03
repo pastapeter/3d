@@ -98,12 +98,6 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   }
   
   func spawnShape() {
-    //    let path = Bundle.main.path(forResource: "test", ofType: "obj")
-    //    let url = URL(fileURLWithPath: path!)
-    //    let asset = MDLAsset(url: url)
-    
-    //    guard let object = asset.object(at: 0) as? MDLMesh else {return}
-    //    let node = SCNNode(mdlObject: object)
     let box = SCNBox(width: 1, height: 1, length: 1, chamferRadius: 0)
     let boxNode = SCNNode(geometry: box)
 //    boxNode.geometry?.firstMaterial?.diffuse.contents = UIImage(named: datasource[3].material ?? "glossy")
@@ -156,28 +150,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   
   @IBAction func didTapShareButton(_ sender: Any) {
     
-//    let cube = scnScene.rootNode.childNode(withName: "cube", recursively: true)!.geometry!
-//    let sphere = scnScene.rootNode.childNode(withName: "sphere", recursively: true)!.geometry!
-//    let cylinder = scnScene.rootNode.childNode(withName: "cylinder", recursively: true)!.geometry!
-//
-//    let dateFormatterGet = DateFormatter()
-//    dateFormatterGet.dateFormat = "yyyy-MM-dd HH:mm:ss"
-//    let timestamp = dateFormatterGet.string(from: Date())
-//
-//    let fixedFilenameOBJ = timestamp + ".obj"
-//
-//    let fullPathOBJ = getDocumentsDirectory().appendingPathComponent(fixedFilenameOBJ) // for the OBJ file
-//
-//    let cubeMesh = MDLMesh(scnGeometry: cube)
-//    let sphereMesh = MDLMesh(scnGeometry: sphere)
-//    let cylinderMesh = MDLMesh(scnGeometry: cylinder)
-//    let asset = MDLAsset()
-//    asset.add(cubeMesh)
-//    asset.add(sphereMesh)
-//    asset.add(cylinderMesh)
-    
     do {
-//      let my3d = try asset.export(to: fullPathOBJ)
       let realm = try Realm()
       
       totalModel = TotalModel(domain: domain,
@@ -290,7 +263,7 @@ extension MainViewController: UITableViewDataSource {
             //            let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            self.cubeInfo.name = material
+            self.cubeInfo.imageName = material
             guard let image = UIImage(named: material) else {return}
             self.cubeInfo.image = image
             cube.geometry?.firstMaterial?.diffuse.contents = image
@@ -306,7 +279,7 @@ extension MainViewController: UITableViewDataSource {
             let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
-            self.cylinderInfo.name = finish.rawValue
+            self.cylinderInfo.imageName = finish.rawValue
             guard let image = UIImage(named: finish.rawValue) else {return}
             self.cylinderInfo.image = image
             cylinder.geometry?.firstMaterial?.diffuse.contents = image

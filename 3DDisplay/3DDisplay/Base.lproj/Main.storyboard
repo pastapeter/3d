@@ -49,7 +49,11 @@
                     </sceneKitView>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="YN8-i1-pKb">
-                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Y96-Qb-mER"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="save" id="Y96-Qb-mER">
+                            <connections>
+                                <action selector="didTapSaveButton:" destination="Blb-A0-hXy" id="Del-e3-18Z"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                 </viewController>
@@ -101,6 +105,9 @@
                                 <fontDescription key="fontDescription" name="GillSans" family="Gill Sans" pointSize="15"/>
                                 <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                 <state key="normal" title="Result2"/>
+                                <connections>
+                                    <action selector="gotoResult2:" destination="hMf-yj-EEU" eventType="touchUpInside" id="is1-cD-iE1"/>
+                                </connections>
                             </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="e2t-cv-Iun"/>

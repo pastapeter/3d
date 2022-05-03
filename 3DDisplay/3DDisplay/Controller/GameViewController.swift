@@ -13,9 +13,21 @@ class GameViewController: UIViewController {
   var targetNode: SCNNode?
   var lastPanLocation = SCNVector3(x: 1, y: 1, z: 0)
   
-  var cubeInfo: CubeInfo?
-  var sphereInfo: SphereInfo?
-  var cylinderInfo: CylinderInfo?
+  var cubeInfo: CubeInfo? {
+    didSet {
+      print(cubeInfo?.position)
+    }
+  }
+  var sphereInfo: SphereInfo? {
+    didSet {
+      print(sphereInfo?.position)
+    }
+  }
+  var cylinderInfo: CylinderInfo? {
+    didSet {
+      print(cylinderInfo?.position)
+    }
+  }
   var totalModel: TotalModel?
   
 
@@ -100,9 +112,13 @@ class GameViewController: UIViewController {
   
     do {
       let realm = try Realm()
-      guard let totalModel = totalModel else { return }
-    
-      
+      guard let cubeInfo = cubeInfo, let sphereInfo = sphereInfo, let cylinderInfo = cylinderInfo else {
+        print("info nil error")
+        return
+      }
+      try! realm.write({
+        realm.add(MovedModel(cube: cubeInfo, sphere: sphereInfo, cylinder: cylinderInfo))
+      })
     } catch {
       print("Couldn't create file(s)")
       return
@@ -145,12 +161,12 @@ extension GameViewController {
       }
       targetNode.localTranslate(by: movementVector)
       self.lastPanLocation = worldTouchPosition
-      if targetNode.name == "sphere", var sphereInfo = sphereInfo {
-        sphereInfo.position = self.lastPanLocation
-      } else if targetNode.name == "cube", var cubeInfo = cubeInfo {
-        cubeInfo.position = self.lastPanLocation
-      } else if targetNode.name == "cylinder", var cylinderInfo = cylinderInfo {
-        cylinderInfo.position = self.lastPanLocation
+      if targetNode.name == "sphere" {
+        sphereInfo?.position = self.lastPanLocation
+      } else if targetNode.name == "cube" {
+        cubeInfo?.position = self.lastPanLocation
+      } else if targetNode.name == "cylinder"{
+        cylinderInfo?.position = self.lastPanLocation
       }
     case .ended:
       targetNode = nil
