@@ -18,7 +18,12 @@ import UIKit
  [ Texture:[Finish들], Texture:[Finish들], Texture:[Finish들] ]
  */
 
-var textureDic = ["Wood":[Finish.Polished, Finish.Natural], "Metal": [Finish.Polished, Finish.Brushed, Finish.Matte], "Leather": [Finish.Soft, Finish.Perforated], "Plastic": [Finish.Polished, Finish.Frosted], "Glass": [Finish.Glossy, Finish.Iridescent]]
+var textureDic = ["Wood":[Finish.Polished, Finish.Natural],
+                  "Metal": [Finish.Polished, Finish.Brushed, Finish.Matte],
+                  "Leather": [Finish.Soft, Finish.Perforated],
+                  "Plastic": [Finish.Polished, Finish.Frosted],
+                  "Glass": [Finish.Glossy, Finish.Iridescent]
+]
 
 
 enum Finish: String, CaseIterable {

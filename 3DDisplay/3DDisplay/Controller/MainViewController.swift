@@ -28,14 +28,14 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var datasource: [Question] = [
     Question(questionTitle: "Q. How long have you had this product?", value: 1), // 0
     Question(questionTitle: "Color", color: UIColor.red), // sphere 1
-    Question(questionTitle: "1-5. How important was the color in the selection of the product?", value: 1), // 높이 2
-    Question(questionTitle: "1-6. On a scale of 1 to 10, was the color selection based on function or emotion?", value: 1), // 크기 3
+    Question(questionTitle: "How important was the color in the selection of the product?", value: 1), // 높이 2
+    Question(questionTitle: "On a scale of 1 to 10, was the color selection based on function or emotion?", value: 1), // 크기 3
     Question(questionTitle: "Material", material: "leather"), // cube 4
-    Question(questionTitle: "2-5. How important was the material+finish in the selection of the product?", value: 1), // 5
-    Question(questionTitle: "2-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1), // 6
+    Question(questionTitle: "How important was the material+finish in the selection of the product?", value: 1), // 5
+    Question(questionTitle: "On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1), // 6
     Question(questionTitle: "Finish ", finish: Finish.Brushed), // cylinder 7
-    Question(questionTitle: "3-5. How important was the material+finish in the selection of the product?", value: 1), // 8
-    Question(questionTitle: "3-6. On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1) //9
+    Question(questionTitle: "How important was the material+finish in the selection of the product?", value: 1), // 8
+    Question(questionTitle: "On a scale of 1 to 10, was the material+finish selection based on function or emotion?", value: 1) //9
   ]
   var presentColorViewController: (() -> Void)?
   var updateColor: ((UIColor) -> Void)?
@@ -49,6 +49,7 @@ class MainViewController: UIViewController, StoryboardInstantiable {
   var mainCylinderPosition = SCNVector3(x: 7, y: 1, z: 0)
   var panStartz: CGFloat = 0
   var targetNode: SCNNode?
+  var material: String = "Wood"
   
   var cubeInfo = CubeInfo(image: UIImage(), size: (width: 1, height: 1, length: 1))
   var sphereInfo = SphereInfo()
@@ -80,8 +81,8 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     // 3
     scnView.autoenablesDefaultLighting = true
     // 4
-    scnView.backgroundColor = UIColor(hex: "f9fbfb")
-//    scnView.scene?.background.contents = UIImage(named: "여")
+    scnView.backgroundColor = UIColor(hex: "f9fbfb") // 바꾸면이거 없애삼
+//    scnView.scene?.background.contents = UIImage(named: "이미지 이름")
   }
   
   func setupScene() {
@@ -260,6 +261,8 @@ extension MainViewController: UITableViewDataSource {
             self.move(focusName: "cube") { self.move(focusName: $0, completion: { _ in}) }
             let cube = self.scnScene.rootNode.childNode(withName: "cube", recursively: true)!
             let material = self.datasource[indexPath.row].material ?? "Wood"
+            self.material = material
+            cell.material = material
             //            let finish = self.datasource[indexPath.row].finish ?? .Natural
             
             // MARK: - 이미지형식: Wood + Natural -> WoodNatural.png
@@ -270,6 +273,7 @@ extension MainViewController: UITableViewDataSource {
           }
         } else {
           cell.questionTextfield.isHidden = true
+          cell.material = material
           cell.updateUI = { [weak self] (value, finish) in
             guard let self = self else {return}
             self.datasource[indexPath.row].material = value

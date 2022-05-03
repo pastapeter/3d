@@ -13,10 +13,10 @@ class MovedAlbumViewController: UIViewController, UICollectionViewDataSource, UI
   let collectionView: UICollectionView = {
     let layout = UICollectionViewFlowLayout()
     layout.minimumLineSpacing = 10
-    layout.minimumInteritemSpacing = 10
+    layout.minimumInteritemSpacing = 0
     
-    var twoCard = (UIScreen.main.bounds.width / 2) - 20
-    layout.itemSize = CGSize(width: UIScreen.main.bounds.width - 40 , height: twoCard * 1.5)
+    var twoCard = (UIScreen.main.bounds.width / 2) - 10
+    layout.itemSize = CGSize(width: twoCard , height: twoCard * 1.5)
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.register(UINib(nibName: AlbumCollectionViewCell.nibName, bundle: nil), forCellWithReuseIdentifier: AlbumCollectionViewCell.identifier)
