@@ -48,7 +48,8 @@ class GameViewController: UIViewController {
     // 3
     scnView.autoenablesDefaultLighting = true
     
-    scnView.backgroundColor = UIColor(hex: "f9fbfb")
+//    scnView.backgroundColor = UIColor(hex: "f9fbfb") // 바꾸면이거 없애삼
+//    scnView.scene?.background.contents = backgroundImage
     
     let panRecognizer = UIPanGestureRecognizer(target: self, action: #selector(handlePan(panGesture:)))
     scnView.addGestureRecognizer(panRecognizer)
@@ -58,6 +59,7 @@ class GameViewController: UIViewController {
   func setupScene() {
     scnScene = SCNScene()
     scnView.scene = scnScene
+    scnScene.background.contents = backgroundImage
   }
   
   func setupCamera() {

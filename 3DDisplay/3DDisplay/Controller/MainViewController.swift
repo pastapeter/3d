@@ -81,13 +81,12 @@ class MainViewController: UIViewController, StoryboardInstantiable {
     // 3
     scnView.autoenablesDefaultLighting = true
     // 4
-    scnView.backgroundColor = UIColor(hex: "f9fbfb") // 바꾸면이거 없애삼
-//    scnView.scene?.background.contents = UIImage(named: "이미지 이름")
   }
   
   func setupScene() {
     scnScene = SCNScene()
     scnView.scene = scnScene
+    scnScene.background.contents = backgroundImage
   }
   
   func setupCamera() {

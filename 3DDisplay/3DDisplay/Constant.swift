@@ -25,6 +25,7 @@ var textureDic = ["Wood":[Finish.Polished, Finish.Natural],
                   "Glass": [Finish.Glossy, Finish.Iridescent]
 ]
 
+var backgroundImage = UIImage(named: "Metal")! // Wood에 이미지이름넣고 Asset에도 똑같이 넣어야함
 
 enum Finish: String, CaseIterable {
 

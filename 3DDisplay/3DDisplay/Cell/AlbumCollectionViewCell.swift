@@ -82,12 +82,14 @@ class AlbumCollectionViewCell: UICollectionViewCell {
     // 3
     sceneView.autoenablesDefaultLighting = true
     
-    sceneView.backgroundColor = UIColor(hex: "f9fbfb")
+//    sceneView.backgroundColor = UIColor(hex: "f9fbfb")
+//    sceneView.scene?.background.contents = backgroundImage
   }
   
   func setupScene() {
     scnScene = SCNScene()
     sceneView.scene = scnScene
+    scnScene.background.contents = backgroundImage
   }
   
   func setupCamera() {

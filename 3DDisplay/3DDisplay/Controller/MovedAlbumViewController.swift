@@ -15,7 +15,7 @@ class MovedAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     layout.minimumLineSpacing = 10
     layout.minimumInteritemSpacing = 0
     
-    var twoCard = (UIScreen.main.bounds.width / 2) - 10
+    var twoCard = (UIScreen.main.bounds.width / 2) - 30
     layout.itemSize = CGSize(width: twoCard , height: twoCard * 1.5)
     
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -43,8 +43,8 @@ class MovedAlbumViewController: UIViewController, UICollectionViewDataSource, UI
     view.backgroundColor = .white
     
     view.addSubview(collectionView)
-    collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor).isActive = true
-    collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor).isActive = true
+    collectionView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20).isActive = true
+    collectionView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20).isActive = true
     collectionView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 20).isActive = true
     collectionView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor).isActive = true
     
